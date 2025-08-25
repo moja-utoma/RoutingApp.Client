@@ -1,0 +1,23 @@
+<h2>{{ title }}</h2>
+
+@if (!items || items.length === 0) {
+  <div class="spinner-container">
+    <mat-spinner [diameter]="50"></mat-spinner>
+  </div>
+} @else {
+  <table mat-table [dataSource]="items" class="mat-elevation-z2">
+
+    <!-- Dynamically generate columns -->
+    @for (col of columns; track col.key) {
+      <ng-container [matColumnDef]="col.key">
+        <th mat-header-cell *matHeaderCellDef> {{ col.label }} </th>
+       <td mat-cell *matCellDef="let element">
+        {{ col.get ? col.get(element) : element[col.key] }}
+      </td>
+      </ng-container>
+    }
+
+    <tr mat-header-row *matHeaderRowDef="columnKeys"></tr>
+  <tr mat-row *matRowDef="let row; columns: columnKeys"></tr>
+  </table>
+}

@@ -1,0 +1,13 @@
+<h2>{{ title }}</h2>
+
+@if (!items || items.length === 0) {
+  <div class="spinner-container">
+    <mat-spinner [diameter]="50"></mat-spinner>
+  </div>
+} @else {
+  <ul>
+    @for (item of items; track item.id) {
+      <li>{{ displayFn(item) }}</li>
+    }
+  </ul>
+}
