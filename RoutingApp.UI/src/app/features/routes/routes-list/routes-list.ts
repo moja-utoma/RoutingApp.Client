@@ -15,14 +15,14 @@ export class RoutesList {
   columns = [
     { key: 'name', label: 'Name' },
     {
-      key: 'warehouses',
+      key: 'warehouseNames',
       label: 'Warehouses',
-      get: (r: Route) => r.warehouses.map((w) => w.name).join(', '),
+      get: (r: Route) => r.warehouseNames.join(', '),
     },
     {
-      key: 'deliveryPoints',
+      key: 'deliveryPointsQuantity',
       label: 'Delivery Points',
-      get: (r: Route) => r.deliveryPoints.map((d) => d.name).join(', '),
+      get: (r: Route) => r.deliveryPointsQuantity,
     },
   ];
 

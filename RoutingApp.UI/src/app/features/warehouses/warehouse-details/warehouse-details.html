@@ -1,0 +1,13 @@
+@if (warehouse != null) {
+  <h2>{{warehouse.name}}</h2>
+  <p><strong>Address:</strong> {{warehouse.address}}</p>
+  <p><strong>Coordinates:</strong> {{warehouse.latitude}}, {{warehouse.longitude}}</p>
+
+  <app-table
+    [title]="'Vehicles'"
+    [items]="warehouse.vehicles"
+    [columns]="vehicleColumns">
+  </app-table>
+} @else {
+  <p>Loading warehouse details...</p>
+}

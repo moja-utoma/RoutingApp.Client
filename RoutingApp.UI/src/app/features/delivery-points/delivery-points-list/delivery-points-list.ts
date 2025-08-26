@@ -24,6 +24,6 @@ export class DeliveryPointsList {
         next: (data) => (this.deliveryPoints = data),
         error: (err) => console.error('API error:', err),
       });
-    }, 2000);
+    }, 0);
   }
 }

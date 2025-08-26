@@ -5,6 +5,7 @@ import { Home } from './features/home/home';
 import { WarehousesList } from './features/warehouses/warehouses-list/warehouses-list';
 import { VehiclesList } from './features/vehicles/vehicles-list/vehicles-list';
 import { RoutesList } from './features/routes/routes-list/routes-list';
+import { WarehouseDetailsPage } from './features/warehouses/warehouse-details/warehouse-details';
 
 export const routes: Routes = [
   {
@@ -19,6 +20,10 @@ export const routes: Routes = [
       {
         path: 'warehouses',
         component: WarehousesList,
+      },
+      {
+        path: 'warehouses/:id',
+        component: WarehouseDetailsPage,
       },
       {
         path: 'vehicles',

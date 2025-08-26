@@ -11,6 +11,21 @@ export interface Warehouse {
   vehicleQuantity: number;
 }
 
+export interface VehicleForWarehouse {
+  id: number;
+  name: string;
+  capacity: number;
+}
+
+export interface WarehouseDetails {
+  id: number;
+  name: string;
+  address: string;
+  longitude: number;
+  latitude: number;
+  vehicles: VehicleForWarehouse[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -20,5 +35,9 @@ export class Warehouses {
 
   getAll(): Observable<Warehouse[]> {
     return this.http.get<Warehouse[]>(this.apiUrl);
+  }
+
+  getById(id: number): Observable<WarehouseDetails> {
+    return this.http.get<WarehouseDetails>(`${this.apiUrl}/${id}`);
   }
 }

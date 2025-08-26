@@ -7,8 +7,8 @@ import { Observable } from 'rxjs';
 export interface Route {
   id: number;
   name: string;
-  warehouses: Warehouse[];
-  deliveryPoints: DeliveryPoint[];
+  warehouseNames: string[];
+  deliveryPointsQuantity: number;
 }
 
 @Injectable({
