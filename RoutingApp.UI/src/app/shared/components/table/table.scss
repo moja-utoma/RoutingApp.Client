@@ -10,16 +10,7 @@ table {
   background-color: transparent;
 }
 
-.action-buttons {
+.actions {
   display: flex;
   gap: 8px;
-  justify-content: flex-end;
-}
-
-.action-buttons button {
-  color: inherit;
-
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.04);
-  }
 }

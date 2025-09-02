@@ -1,0 +1,32 @@
+<h1>Create new Delivery Point</h1>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-container">
+  <mat-form-field appearance="fill">
+    <mat-label>Name</mat-label>
+    <input matInput formControlName="name" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Address</mat-label>
+    <input matInput formControlName="address" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Longitude</mat-label>
+    <input matInput type="number" formControlName="longitude" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Latitude</mat-label>
+    <input matInput type="number" formControlName="latitude" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Weight</mat-label>
+    <input matInput type="number" formControlName="weight" />
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" type="submit" [disabled]="submitting || form.invalid">
+    Create
+  </button>
+</form>

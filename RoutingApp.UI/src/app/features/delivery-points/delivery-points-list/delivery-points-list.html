@@ -1,5 +1,10 @@
 <app-table
-      title="Delivery Points"
-      [items]="deliveryPoints"
-      [columns]="columns">
-    </app-table>
+  title="Delivery Points"
+  [items]="deliveryPoints"
+  [columns]="columns"
+  [showActions]="true"
+  [onEdit]="onEdit"
+  [onDelete]="onDelete"
+>
+  <div><a routerLink="/delivery-points/create">Create new delivery point</a></div>
+</app-table>

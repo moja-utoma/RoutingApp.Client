@@ -1,0 +1,37 @@
+.form-container {
+  max-width: 600px;          // limit form width
+  margin: 40px;      // vertical spacing between fields
+  padding: 0 16px;            // some horizontal padding on small screens
+
+  mat-form-field {
+    width: 100%;              // make all inputs full width
+  }
+
+  button {
+    padding: 0 24px;
+    font-weight: 500;
+  }
+
+  // Optional: highlight invalid fields
+  .mat-form-field-invalid .mat-input-element {
+    border-bottom-color: #f44336 !important; // red underline for invalid inputs
+  }
+
+  @media (max-width: 600px) {
+    button {
+      width: 100%;
+    }
+  }
+}
+
+// Optional success message
+.success-message {
+  max-width: 600px;
+  margin: 16px auto;
+  padding: 12px 16px;
+  color: #155724;
+  background-color: #d4edda;
+  border-radius: 4px;
+  font-weight: 500;
+  text-align: center;
+}

@@ -6,6 +6,8 @@ import { WarehousesList } from './features/warehouses/warehouses-list/warehouses
 import { VehiclesList } from './features/vehicles/vehicles-list/vehicles-list';
 import { RoutesList } from './features/routes/routes-list/routes-list';
 import { WarehouseDetailsPage } from './features/warehouses/warehouse-details/warehouse-details';
+import { DeliveryPointsDetailsPage } from './features/delivery-points/delivery-points-details-page/delivery-points-details-page';
+import { DeliveryPointsCreate } from './features/delivery-points/delivery-points-create/delivery-points-create';
 
 export const routes: Routes = [
   {
@@ -16,6 +18,18 @@ export const routes: Routes = [
       {
         path: 'delivery-points',
         component: DeliveryPointsList,
+      },
+      {
+        path: 'delivery-points/create',
+        component: DeliveryPointsCreate,
+      },
+      {
+        path: 'delivery-points/:id',
+        component: DeliveryPointsDetailsPage,
+      },
+      {
+        path: 'delivery-points/edit/:id',
+        component: DeliveryPointsCreate
       },
       {
         path: 'warehouses',

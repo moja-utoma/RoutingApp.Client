@@ -1,0 +1,9 @@
+@if (deliveryPoint != null) {
+  <h2>{{deliveryPoint.name}}</h2>
+  <p><strong>Address:</strong> {{deliveryPoint.address}}</p>
+  <p><strong>Coordinates:</strong> {{deliveryPoint.latitude}}, {{deliveryPoint.longitude}}</p>
+  <p><strong>Weight:</strong> {{deliveryPoint.weight}}</p>
+
+} @else {
+  <p>Loading delivery point details...</p>
+}

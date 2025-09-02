@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Warehouse } from '../warehouses/warehouses';
-import { DeliveryPoint } from '../delivery-points/delivery-points';
+import { DeliveryPoint } from '../delivery-points/delivery-points-service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 

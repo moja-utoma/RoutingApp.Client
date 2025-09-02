@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Vehicle } from '../vehicles/vehicles';
 
 export interface Warehouse {
   id: number;
@@ -11,19 +12,13 @@ export interface Warehouse {
   vehicleQuantity: number;
 }
 
-export interface VehicleForWarehouse {
-  id: number;
-  name: string;
-  capacity: number;
-}
-
 export interface WarehouseDetails {
   id: number;
   name: string;
   address: string;
   longitude: number;
   latitude: number;
-  vehicles: VehicleForWarehouse[];
+  vehicles: Vehicle[];
 }
 
 @Injectable({
