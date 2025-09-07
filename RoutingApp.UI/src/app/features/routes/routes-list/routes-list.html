@@ -1,5 +1,10 @@
 <app-table
-      title="Routes"
-      [items]="routes"
-      [columns]="columns">
-    </app-table>
+  title="Routes"
+  [items]="routes"
+  [columns]="columns"
+  [showActions]="true"
+  [onEdit]="onEdit"
+  [onDelete]="onDelete"
+>
+<div><a routerLink="/routes/create">Create new route</a></div>
+</app-table>

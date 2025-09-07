@@ -8,6 +8,8 @@ import { RoutesList } from './features/routes/routes-list/routes-list';
 import { WarehouseDetailsPage } from './features/warehouses/warehouse-details/warehouse-details';
 import { DeliveryPointsDetailsPage } from './features/delivery-points/delivery-points-details-page/delivery-points-details-page';
 import { DeliveryPointsCreate } from './features/delivery-points/delivery-points-create/delivery-points-create';
+import { RoutesDetailsPage } from './features/routes/routes-details-page/routes-details-page';
+import { RoutesCreate } from './features/routes/routes-create/routes-create';
 
 export const routes: Routes = [
   {
@@ -46,6 +48,18 @@ export const routes: Routes = [
       {
         path: 'routes',
         component: RoutesList,
+      },
+      {
+        path: 'routes/create',
+        component: RoutesCreate,
+      },
+      {
+        path: 'routes/:id',
+        component: RoutesDetailsPage,
+      },
+      {
+        path: 'routes/edit/:id',
+        component: RoutesCreate
       },
     ],
   },

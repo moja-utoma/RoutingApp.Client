@@ -9,7 +9,6 @@ export interface CreateDeliveryPoint {
   longitude: number;
   latitude: number;
   weight: number;
-
 }
 
 export interface DeliveryPoint {

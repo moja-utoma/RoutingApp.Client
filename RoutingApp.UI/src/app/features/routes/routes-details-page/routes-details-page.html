@@ -1,0 +1,77 @@
+@if (loading) {
+  <div class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading route details...</p>
+  </div>
+} @else if (error) {
+  <mat-card class="error-card">
+    <mat-card-content>
+      <p class="error-message">{{ error }}</p>
+    </mat-card-content>
+  </mat-card>
+} @else if (routeDetails) {
+  <div class="route-details-container">
+    <mat-card class="route-header">
+      <mat-card-header>
+        <mat-card-title>{{ routeDetails.name }}</mat-card-title>
+        <mat-card-subtitle>Route ID: {{ routeDetails.id }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="route-stats">
+          <div class="stat-item">
+            <span class="stat-label">Warehouses:</span>
+            <span class="stat-value">{{ routeDetails.warehouses.length }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Delivery Points:</span>
+            <span class="stat-value">{{ routeDetails.deliveryPoints.length }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Total Weight:</span>
+            <span class="stat-value">
+              {{ getTotalWeight() }} kg
+            </span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-tab-group class="route-tabs">
+      <mat-tab label="Warehouses ({{ routeDetails.warehouses.length }})">
+        <div class="tab-content">
+          @if (routeDetails.warehouses.length > 0) {
+            <app-table
+              [title]="'Route Warehouses'"
+              [items]="warehousesForTable"
+              [columns]="warehouseColumns">
+            </app-table>
+          } @else {
+            <mat-card class="empty-state">
+              <mat-card-content>
+                <p>No warehouses assigned to this route.</p>
+              </mat-card-content>
+            </mat-card>
+          }
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Delivery Points ({{ routeDetails.deliveryPoints.length }})">
+        <div class="tab-content">
+          @if (routeDetails.deliveryPoints.length > 0) {
+            <app-table
+              [title]="'Route Delivery Points'"
+              [items]="deliveryPointsForTable"
+              [columns]="deliveryPointColumns">
+            </app-table>
+          } @else {
+            <mat-card class="empty-state">
+              <mat-card-content>
+                <p>No delivery points assigned to this route.</p>
+              </mat-card-content>
+            </mat-card>
+          }
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+}
