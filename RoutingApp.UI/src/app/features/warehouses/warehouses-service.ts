@@ -21,10 +21,19 @@ export interface WarehouseDetails {
   vehicles: Vehicle[];
 }
 
+export interface CreateWarehouse {
+  id?: number;
+  name: string;
+  address: string;
+  longitude: number;
+  latitude: number;
+  vehicleIds?: number[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
-export class Warehouses {
+export class WarehousesService {
   private http = inject(HttpClient);
   private apiUrl = 'https://localhost:7136/api/Warehouses';
 
@@ -34,5 +43,17 @@ export class Warehouses {
 
   getById(id: number): Observable<WarehouseDetails> {
     return this.http.get<WarehouseDetails>(`${this.apiUrl}/${id}`);
+  }
+
+  create(data: CreateWarehouse): Observable<Warehouse> {
+    return this.http.post<Warehouse>(this.apiUrl, data);
+  }
+
+  update(data: CreateWarehouse): Observable<Warehouse> {
+    return this.http.put<Warehouse>(this.apiUrl, data);
+  }
+
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

@@ -1,5 +1,10 @@
 <app-table
   title="Warehouses"
   [items]="warehouses"
-  [columns]="columns">
+  [columns]="columns"
+  [showActions]="true"
+  [onEdit]="onEdit"
+  [onDelete]="onDelete"
+>
+  <div><a routerLink="/warehouses/create">Create new warehouse</a></div>
 </app-table>

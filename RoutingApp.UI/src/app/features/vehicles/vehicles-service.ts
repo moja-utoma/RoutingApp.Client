@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Warehouse } from '../warehouses/warehouses';
+import { Warehouse } from '../warehouses/warehouses-service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 

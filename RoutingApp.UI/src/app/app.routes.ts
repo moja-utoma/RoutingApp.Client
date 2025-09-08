@@ -12,6 +12,7 @@ import { RoutesDetailsPage } from './features/routes/routes-details-page/routes-
 import { RoutesCreate } from './features/routes/routes-create/routes-create';
 import { VehiclesDetailsPage } from './features/vehicles/vehicles-details-page/vehicles-details-page';
 import { VehiclesCreate } from './features/vehicles/vehicles-create/vehicles-create';
+import { WarehousesCreate } from './features/warehouses/warehouses-create/warehouses-create';
 
 export const routes: Routes = [
   {
@@ -40,8 +41,16 @@ export const routes: Routes = [
         component: WarehousesList,
       },
       {
+        path: 'warehouses/create',
+        component: WarehousesCreate,
+      },
+      {
         path: 'warehouses/:id',
         component: WarehouseDetailsPage,
+      },
+      {
+        path: 'warehouses/edit/:id',
+        component: WarehousesCreate,
       },
       {
         path: 'vehicles',

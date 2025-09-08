@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateRoute, RoutesService } from '../routes-service';
-import { Warehouse, Warehouses } from '../../warehouses/warehouses';
+import { Warehouse, WarehousesService } from '../../warehouses/warehouses-service';
 import {
   DeliveryPoint,
   DeliveryPointsService,
@@ -37,7 +37,7 @@ export class RoutesCreate {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private routesService = inject(RoutesService);
-  private warehousesService = inject(Warehouses);
+  private warehousesService = inject(WarehousesService);
   private deliveryPointsService = inject(DeliveryPointsService);
 
   routeForm: FormGroup = this.fb.group({

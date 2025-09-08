@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { WarehouseDetails, Warehouses } from '../warehouses';
+import { WarehouseDetails, WarehousesService } from '../warehouses-service';
 import { ActivatedRoute } from '@angular/router';
 import { Table } from '../../../shared/components/table/table';
 import { Map, MapPoint } from '../../../shared/components/map/map';
@@ -11,7 +11,7 @@ import { Map, MapPoint } from '../../../shared/components/map/map';
   styleUrl: './warehouse-details.scss',
 })
 export class WarehouseDetailsPage {
-  private warehouseService = inject(Warehouses);
+  private warehouseService = inject(WarehousesService);
   private route = inject(ActivatedRoute);
 
   pointMarker?: MapPoint;

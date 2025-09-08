@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CreateVehicle, VehiclesService } from '../vehicles-service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Warehouse, Warehouses } from '../../warehouses/warehouses';
+import { Warehouse, WarehousesService } from '../../warehouses/warehouses-service';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
@@ -18,7 +18,7 @@ export class VehiclesCreate {
   private service = inject(VehiclesService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
-  private warehousesService = inject(Warehouses);
+  private warehousesService = inject(WarehousesService);
 
   form: FormGroup = this.fb.group({
     name: ['', Validators.required],
