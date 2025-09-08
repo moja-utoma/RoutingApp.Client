@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Vehicle } from '../vehicles/vehicles';
+import { Vehicle } from '../vehicles/vehicles-service';
 
 export interface Warehouse {
   id: number;

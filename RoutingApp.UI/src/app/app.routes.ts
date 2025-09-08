@@ -10,6 +10,8 @@ import { DeliveryPointsDetailsPage } from './features/delivery-points/delivery-p
 import { DeliveryPointsCreate } from './features/delivery-points/delivery-points-create/delivery-points-create';
 import { RoutesDetailsPage } from './features/routes/routes-details-page/routes-details-page';
 import { RoutesCreate } from './features/routes/routes-create/routes-create';
+import { VehiclesDetailsPage } from './features/vehicles/vehicles-details-page/vehicles-details-page';
+import { VehiclesCreate } from './features/vehicles/vehicles-create/vehicles-create';
 
 export const routes: Routes = [
   {
@@ -31,7 +33,7 @@ export const routes: Routes = [
       },
       {
         path: 'delivery-points/edit/:id',
-        component: DeliveryPointsCreate
+        component: DeliveryPointsCreate,
       },
       {
         path: 'warehouses',
@@ -44,6 +46,18 @@ export const routes: Routes = [
       {
         path: 'vehicles',
         component: VehiclesList,
+      },
+      {
+        path: 'vehicles/create',
+        component: VehiclesCreate,
+      },
+      {
+        path: 'vehicles/:id',
+        component: VehiclesDetailsPage,
+      },
+      {
+        path: 'vehicles/edit/:id',
+        component: VehiclesCreate,
       },
       {
         path: 'routes',
@@ -59,7 +73,7 @@ export const routes: Routes = [
       },
       {
         path: 'routes/edit/:id',
-        component: RoutesCreate
+        component: RoutesCreate,
       },
     ],
   },

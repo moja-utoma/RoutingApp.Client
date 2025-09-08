@@ -1,0 +1,16 @@
+@if (vehicle != null) {
+<h2>{{ vehicle.name }}</h2>
+<p><strong>Capacity:</strong> {{ vehicle.capacity }}</p>
+@if (vehicle.warehouse != null) {
+<h3>Warehouse Information</h3>
+<p><strong>Name:</strong> {{ vehicle.warehouse.name }}</p>
+<p><strong>Address:</strong> {{ vehicle.warehouse.address }}</p>
+<p>
+  <strong>Coordinates:</strong> {{ vehicle.warehouse.latitude }}, {{ vehicle.warehouse.longitude }}
+</p>
+<p><strong>Vehicles Stored:</strong> {{ vehicle.warehouse.vehicleQuantity }}</p>
+} @else {
+<p>This vehicle is not assigned to any warehouse.</p>
+} } @else {
+<p>Loading vehicle details...</p>
+}
