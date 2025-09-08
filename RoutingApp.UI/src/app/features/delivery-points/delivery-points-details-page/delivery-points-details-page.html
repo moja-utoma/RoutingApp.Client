@@ -1,9 +1,9 @@
 @if (deliveryPoint != null) {
-  <h2>{{deliveryPoint.name}}</h2>
-  <p><strong>Address:</strong> {{deliveryPoint.address}}</p>
-  <p><strong>Coordinates:</strong> {{deliveryPoint.latitude}}, {{deliveryPoint.longitude}}</p>
-  <p><strong>Weight:</strong> {{deliveryPoint.weight}}</p>
-
+<h2>{{ deliveryPoint.name }}</h2>
+<p><strong>Address:</strong> {{ deliveryPoint.address }}</p>
+<p><strong>Coordinates:</strong> {{ deliveryPoint.latitude | number: '1.2-6' }}, {{ deliveryPoint.longitude | number: '1.2-6' }}</p>
+<p><strong>Weight:</strong> {{ deliveryPoint.weight }}</p>
+<app-map [points]="[pointMarker!]"></app-map>
 } @else {
-  <p>Loading delivery point details...</p>
+<p>Loading delivery point details...</p>
 }
