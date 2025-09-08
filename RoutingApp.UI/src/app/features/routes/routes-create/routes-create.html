@@ -1,95 +1,65 @@
-<div class="route-form-container">
-    <mat-card class="form-card">
-      <mat-card-header>
-        <mat-card-title>
-          {{ editMode ? 'Edit Route' : 'Create New Route' }}
-        </mat-card-title>
-      </mat-card-header>
+<h1>{{ editMode ? 'Edit Route' : 'Create New Route' }}</h1>
 
-      <mat-card-content>
-        <form [formGroup]="routeForm" (ngSubmit)="onSubmit()">
-          <!-- Route Name -->
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Route Name</mat-label>
-            <input
-              matInput
-              formControlName="name"
-              placeholder="Enter route name"
-              maxlength="100">
-            @if (nameControl?.invalid && nameControl?.touched) {
-              <mat-error>
-                @if (nameControl?.errors?.['required']) {
-                  Route name is required
-                } @else if (nameControl?.errors?.['minlength']) {
-                  Route name must be at least 2 characters long
-                }
-              </mat-error>
-            }
-          </mat-form-field>
+<form [formGroup]="routeForm" (ngSubmit)="onSubmit()" class="form-container">
+  <!-- Route Name -->
+  <mat-form-field appearance="fill">
+    <mat-label>Route Name</mat-label>
+    <input matInput formControlName="name" placeholder="Enter route name" maxlength="100" />
+    @if (nameControl?.invalid && nameControl?.touched) {
+    <mat-error>
+      @if (nameControl?.errors?.['required']) { Route name is required } @else if
+      (nameControl?.errors?.['minlength']) { Route name must be at least 2 characters long }
+    </mat-error>
+    }
+  </mat-form-field>
 
-          <!-- Warehouses Selection -->
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Select Warehouses</mat-label>
-            <mat-select
-              formControlName="warehouseIds"
-              multiple
-              placeholder="Choose warehouses">
-              @for (warehouse of warehouses; track warehouse.id) {
-                <mat-option [value]="warehouse.id">
-                  {{ warehouse.name }} - {{ warehouse.address }}
-                </mat-option>
-              }
-            </mat-select>
-            @if (warehouseIdsControl?.invalid && warehouseIdsControl?.touched) {
-              <mat-error>
-                At least one warehouse must be selected
-              </mat-error>
-            }
-            <mat-hint>Select one or more warehouses for this route</mat-hint>
-          </mat-form-field>
+  <!-- Warehouses Selection -->
+  <mat-form-field appearance="fill" >
+    <mat-label>Select Warehouses</mat-label>
+    <mat-select formControlName="warehouseIds" multiple placeholder="Choose warehouses">
+      @for (warehouse of warehouses; track warehouse.id) {
+      <mat-option [value]="warehouse.id">
+        {{ warehouse.name }} - {{ warehouse.address }}
+      </mat-option>
+      }
+    </mat-select>
+    @if (warehouseIdsControl?.invalid && warehouseIdsControl?.touched) {
+    <mat-error> At least one warehouse must be selected </mat-error>
+    }
+    <mat-hint>Select one or more warehouses for this route</mat-hint>
+  </mat-form-field>
 
-          <!-- Delivery Points Selection -->
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Select Delivery Points</mat-label>
-            <mat-select
-              formControlName="deliveryPointIds"
-              multiple
-              placeholder="Choose delivery points">
-              @for (deliveryPoint of deliveryPoints; track deliveryPoint.id) {
-                <mat-option [value]="deliveryPoint.id">
-                  {{ deliveryPoint.name }} - {{ deliveryPoint.address }}
-                </mat-option>
-              }
-            </mat-select>
-            @if (deliveryPointIdsControl?.invalid && deliveryPointIdsControl?.touched) {
-              <mat-error>
-                At least one delivery point must be selected
-              </mat-error>
-            }
-            <mat-hint>Select one or more delivery points for this route</mat-hint>
-          </mat-form-field>
+  <!-- Delivery Points Selection -->
+  <mat-form-field appearance="fill" >
+    <mat-label>Select Delivery Points</mat-label>
+    <mat-select formControlName="deliveryPointIds" multiple placeholder="Choose delivery points">
+      @for (deliveryPoint of deliveryPoints; track deliveryPoint.id) {
+      <mat-option [value]="deliveryPoint.id">
+        {{ deliveryPoint.name }} - {{ deliveryPoint.address }}
+      </mat-option>
+      }
+    </mat-select>
+    @if (deliveryPointIdsControl?.invalid && deliveryPointIdsControl?.touched) {
+    <mat-error> At least one delivery point must be selected </mat-error>
+    }
+    <mat-hint>Select one or more delivery points for this route</mat-hint>
+  </mat-form-field>
 
-          <!-- Action Buttons -->
-          <div class="form-actions">
-            <button
-              type="button"
-              mat-stroked-button
-              (click)="onCancel()"
-              [disabled]="submitting">
-              Cancel
-            </button>
-            <button
-              type="submit"
-              mat-raised-button
-              color="primary"
-              [disabled]="submitting || routeForm.invalid">
-              @if (submitting) {
-                <mat-spinner diameter="20" style="margin-right: 8px;"></mat-spinner>
-              }
-              {{ editMode ? 'Update Route' : 'Create Route' }}
-            </button>
-          </div>
-        </form>
-      </mat-card-content>
-    </mat-card>
+  <!-- Action Buttons -->
+  <div class="form-actions">
+    <button type="button" mat-stroked-button (click)="onCancel()" [disabled]="submitting">
+      Cancel
+    </button>
+    <button
+      type="submit"
+      mat-raised-button
+      color="primary"
+      [disabled]="submitting || routeForm.invalid"
+    >
+      @if (submitting) {
+      <mat-spinner diameter="20" style="margin-right: 8px"></mat-spinner>
+      }
+      {{ editMode ? 'Update Route' : 'Create Route' }}
+    </button>
   </div>
+</form>

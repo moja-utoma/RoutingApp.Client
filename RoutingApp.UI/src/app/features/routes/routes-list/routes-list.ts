@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Table } from '../../../shared/components/table/table';
-import { Route, Routes } from '../routes';
+import { Route, RoutesService } from '../routes-service';
 import { MapPoint } from '../../../shared/components/map/map';
 import { Router, RouterLink } from '@angular/router';
 
@@ -11,7 +11,7 @@ import { Router, RouterLink } from '@angular/router';
   styleUrl: './routes-list.scss',
 })
 export class RoutesList {
-  private routesService = inject(Routes);
+  private routesService = inject(RoutesService);
   private router = inject(Router);
   routes: Route[] = [];
 

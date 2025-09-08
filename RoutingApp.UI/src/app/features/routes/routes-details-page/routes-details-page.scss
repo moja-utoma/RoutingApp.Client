@@ -1,132 +1,132 @@
-.route-details-container {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
+// .route-details-container {
+//   padding: 20px;
+//   max-width: 1200px;
+//   margin: 0 auto;
+// }
 
-.loading-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px;
-  text-align: center;
+// .loading-container {
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   justify-content: center;
+//   padding: 40px;
+//   text-align: center;
 
-  mat-spinner {
-    margin-bottom: 16px;
-  }
+//   mat-spinner {
+//     margin-bottom: 16px;
+//   }
 
-  p {
-    color: #666;
-    font-size: 16px;
-  }
-}
+//   p {
+//     color: #666;
+//     font-size: 16px;
+//   }
+// }
 
-.error-card {
-  margin: 20px;
-  background-color: #ffebee;
+// .error-card {
+//   margin: 20px;
+//   background-color: #ffebee;
 
-  .error-message {
-    color: #c62828;
-    font-weight: 500;
-    margin: 0;
-  }
-}
+//   .error-message {
+//     color: #c62828;
+//     font-weight: 500;
+//     margin: 0;
+//   }
+// }
 
-.route-header {
-  margin-bottom: 24px;
+// .route-header {
+//   margin-bottom: 24px;
 
-  mat-card-title {
-    font-size: 24px;
-    font-weight: 600;
-    color: #1976d2;
-  }
+//   mat-card-title {
+//     font-size: 24px;
+//     font-weight: 600;
+//     color: #1976d2;
+//   }
 
-  mat-card-subtitle {
-    font-size: 14px;
-    color: #666;
-    margin-top: 4px;
-  }
-}
+//   mat-card-subtitle {
+//     font-size: 14px;
+//     color: #666;
+//     margin-top: 4px;
+//   }
+// }
 
-.route-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
-  margin-top: 16px;
+// .route-stats {
+//   display: flex;
+//   flex-wrap: wrap;
+//   gap: 24px;
+//   margin-top: 16px;
 
-  .stat-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 12px 16px;
-    background-color: #f5f5f5;
-    border-radius: 8px;
-    min-width: 120px;
+//   .stat-item {
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+//     padding: 12px 16px;
+//     background-color: #f5f5f5;
+//     border-radius: 8px;
+//     min-width: 120px;
 
-    .stat-label {
-      font-size: 12px;
-      color: #666;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
+//     .stat-label {
+//       font-size: 12px;
+//       color: #666;
+//       font-weight: 500;
+//       text-transform: uppercase;
+//       letter-spacing: 0.5px;
+//     }
 
-    .stat-value {
-      font-size: 20px;
-      font-weight: 600;
-      color: #1976d2;
-      margin-top: 4px;
-    }
-  }
-}
+//     .stat-value {
+//       font-size: 20px;
+//       font-weight: 600;
+//       color: #1976d2;
+//       margin-top: 4px;
+//     }
+//   }
+// }
 
-.route-tabs {
-  .tab-content {
-    padding: 24px 0;
-  }
-}
+// .route-tabs {
+//   .tab-content {
+//     padding: 24px 0;
+//   }
+// }
 
-.empty-state {
-  text-align: center;
-  background-color: #f9f9f9;
-  border: 2px dashed #ddd;
+// .empty-state {
+//   text-align: center;
+//   background-color: #f9f9f9;
+//   border: 2px dashed #ddd;
 
-  p {
-    color: #666;
-    font-style: italic;
-    margin: 0;
-  }
-}
+//   p {
+//     color: #666;
+//     font-style: italic;
+//     margin: 0;
+//   }
+// }
 
-// Responsive design
-@media (max-width: 768px) {
-  .route-details-container {
-    padding: 12px;
-  }
+// // Responsive design
+// @media (max-width: 768px) {
+//   .route-details-container {
+//     padding: 12px;
+//   }
 
-  .route-stats {
-    flex-direction: column;
-    gap: 12px;
+//   .route-stats {
+//     flex-direction: column;
+//     gap: 12px;
 
-    .stat-item {
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      min-width: unset;
+//     .stat-item {
+//       flex-direction: row;
+//       justify-content: space-between;
+//       align-items: center;
+//       min-width: unset;
 
-      .stat-label {
-        font-size: 14px;
-      }
+//       .stat-label {
+//         font-size: 14px;
+//       }
 
-      .stat-value {
-        font-size: 18px;
-        margin-top: 0;
-      }
-    }
-  }
+//       .stat-value {
+//         font-size: 18px;
+//         margin-top: 0;
+//       }
+//     }
+//   }
 
-  .route-tabs .tab-content {
-    padding: 16px 0;
-  }
-}
+//   .route-tabs .tab-content {
+//     padding: 16px 0;
+//   }
+// }

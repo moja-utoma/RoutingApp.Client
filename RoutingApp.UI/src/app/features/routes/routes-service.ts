@@ -34,7 +34,7 @@ export interface RouteDetails {
   deliveryPoints: DeliveryPointDetails[];
 }
 
-export interface CreateRoute{
+export interface CreateRoute {
   id: number;
   name: string;
   warehouses: number[];
@@ -44,7 +44,7 @@ export interface CreateRoute{
 @Injectable({
   providedIn: 'root',
 })
-export class Routes {
+export class RoutesService {
   private http = inject(HttpClient);
   private apiUrl = 'https://localhost:7136/api/Routes';
 

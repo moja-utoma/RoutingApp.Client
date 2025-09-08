@@ -4,7 +4,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Table } from '../../../shared/components/table/table';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
-import { RouteDetails, Routes } from '../routes';
+import { RouteDetails, RoutesService } from '../routes-service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -14,7 +14,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './routes-details-page.scss',
 })
 export class RoutesDetailsPage {
-  private routesService = inject(Routes);
+  private routesService = inject(RoutesService);
   private route = inject(ActivatedRoute);
 
   routeDetails?: RouteDetails;
