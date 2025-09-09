@@ -21,7 +21,6 @@ export interface MapPoint {
   imports: [],
   templateUrl: './map.html',
   styleUrl: './map.scss',
-  //encapsulation: ViewEncapsulation.None,
 })
 export class Map implements OnChanges, AfterViewInit { //mapView
   @ViewChild('mapEl', { static: true }) private mapEl!: ElementRef<HTMLDivElement>;
@@ -77,6 +76,7 @@ export class Map implements OnChanges, AfterViewInit { //mapView
       this.map.fitBounds(bounds, { padding: [30, 30], maxZoom: 14 });
     }
 
-    setTimeout(() => this.map?.invalidateSize(), 0); //?
+    setTimeout(() => this.map?.invalidateSize(), 0); // ensures Leaflet’s map redraw happens after the DOM/layout is stable
   }
 }
+0

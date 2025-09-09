@@ -9,10 +9,14 @@ import { Table } from '../../../shared/components/table/table';
 import { Router, RouterLink } from '@angular/router';
 import { createDefaultQueryParams, QueryParamsModel } from '../../../shared/models/query-params-model';
 import { PageEvent } from '@angular/material/paginator';
+import { Sort } from '@angular/material/sort';
+import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-delivery-points-list',
-  imports: [Table, RouterLink],
+  imports: [Table, RouterLink, ReactiveFormsModule],
   templateUrl: './delivery-points-list.html',
   styleUrl: './delivery-points-list.scss',
 })
@@ -79,11 +83,16 @@ export class DeliveryPointsList {
     });
   }
 
-  onSearch(searchString: string): void {
-    this.loadPage({ ...this.queryParams, searchString, page: 1 });
+  onSortChange(event: Sort): void {
+    this.loadPage({
+      ...this.queryParams,
+      orderBy: event.active,
+      isDesc: event.direction === 'desc',
+      page: 1,
+    });
   }
 
-  onSort(orderBy: string, isDesc: boolean): void {
-    this.loadPage({ ...this.queryParams, orderBy, isDesc, page: 1 });
+  onSearch(searchString: string): void {
+    this.loadPage({ ...this.queryParams, searchString, page: 1 });
   }
 }

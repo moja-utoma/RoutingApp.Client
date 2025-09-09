@@ -3,6 +3,7 @@
   [items]="deliveryPoints"
   [columns]="columns"
   [showActions]="true"
+  [showSort]="true"
   [onEdit]="onEdit"
   [onDelete]="onDelete"
   [showPagination]="true"
@@ -10,6 +11,9 @@
   [pageSize]="queryParams.pageSize"
   [totalItems]="totalPages * queryParams.pageSize"
   (pageChange)="onPageChange($event)"
+  (sortChange)="onSortChange($event)"
+  [showSearch]="true"
+  (searchChange)="onSearch($event)"
 >
   <div><a routerLink="/delivery-points/create">Create new delivery point</a></div>
 </app-table>
