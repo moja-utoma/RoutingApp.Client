@@ -40,4 +40,12 @@
   <tr mat-header-row *matHeaderRowDef="columnKeys"></tr>
   <tr mat-row *matRowDef="let row; columns: columnKeys"></tr>
 </table>
+@if (showPagination) {
+    <mat-paginator
+      [length]="totalItems"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      (page)="pageChange.emit($event)">
+    </mat-paginator>
+  }
 }

@@ -5,6 +5,11 @@
   [showActions]="true"
   [onEdit]="onEdit"
   [onDelete]="onDelete"
+  [showPagination]="true"
+  [pageIndex]="pageIndex - 1"
+  [pageSize]="queryParams.pageSize"
+  [totalItems]="totalPages * queryParams.pageSize"
+  (pageChange)="onPageChange($event)"
 >
   <div><a routerLink="/delivery-points/create">Create new delivery point</a></div>
 </app-table>

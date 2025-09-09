@@ -2,6 +2,8 @@ import { Component, inject } from '@angular/core';
 import { Warehouse, WarehousesService } from '../warehouses-service';
 import { Table } from '../../../shared/components/table/table';
 import { Router, RouterLink } from '@angular/router';
+import { createDefaultQueryParams, QueryParamsModel } from '../../../shared/models/query-params-model';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-warehouses-list',
@@ -14,6 +16,13 @@ export class WarehousesList {
   warehouses: Warehouse[] = [];
   private router = inject(Router);
 
+  pageIndex = 1;
+  totalPages = 0;
+  hasPreviousPage = false;
+  hasNextPage = false;
+
+  queryParams = createDefaultQueryParams();
+
   columns: {
     key: keyof Warehouse;
     label: string;
@@ -25,12 +34,22 @@ export class WarehousesList {
   ];
 
   ngOnInit(): void {
-    setTimeout(() => {
-      this.service.getAll().subscribe({
-        next: (data) => (this.warehouses = data),
-        error: (err) => console.error('API error:', err),
-      });
-    }, 0);
+    this.loadPage(this.queryParams);
+  }
+
+  loadPage(params: QueryParamsModel): void {
+    this.queryParams = { ...params };
+
+    this.service.getAll(this.queryParams).subscribe({
+      next: (response) => {
+        this.warehouses = response.items;
+        this.pageIndex = response.pageIndex;
+        this.totalPages = response.totalPages;
+        this.hasPreviousPage = response.hasPreviousPage;
+        this.hasNextPage = response.hasNextPage;
+      },
+      error: (err) => console.error('API error:', err),
+    });
   }
 
   onEdit = (element: Warehouse) => {
@@ -48,4 +67,20 @@ export class WarehousesList {
       });
     }
   };
+
+  onPageChange(event: PageEvent): void {
+    this.loadPage({
+      ...this.queryParams,
+      page: event.pageIndex + 1,
+      pageSize: event.pageSize,
+    });
+  }
+
+  onSearch(searchString: string): void {
+    this.loadPage({ ...this.queryParams, searchString, page: 1 });
+  }
+
+  onSort(orderBy: string, isDesc: boolean): void {
+    this.loadPage({ ...this.queryParams, orderBy, isDesc, page: 1 });
+  }
 }

@@ -7,6 +7,8 @@ import {
 import { List } from '../../../shared/components/list/list';
 import { Table } from '../../../shared/components/table/table';
 import { Router, RouterLink } from '@angular/router';
+import { createDefaultQueryParams, QueryParamsModel } from '../../../shared/models/query-params-model';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-delivery-points-list',
@@ -19,6 +21,13 @@ export class DeliveryPointsList {
   deliveryPoints: DeliveryPoint[] = [];
   private router = inject(Router);
 
+  pageIndex = 1;
+  totalPages = 0;
+  hasPreviousPage = false;
+  hasNextPage = false;
+
+  queryParams = createDefaultQueryParams();
+
   columns: {
     key: keyof DeliveryPoint;
     label: string;
@@ -30,12 +39,22 @@ export class DeliveryPointsList {
   ];
 
   ngOnInit(): void {
-    setTimeout(() => {
-      this.deliveryService.getAll().subscribe({
-        next: (data) => (this.deliveryPoints = data),
-        error: (err) => console.error('API error:', err),
-      });
-    }, 0);
+    this.loadPage(this.queryParams);
+  }
+
+  loadPage(params: QueryParamsModel): void {
+    this.queryParams = { ...params };
+
+    this.deliveryService.getAll(this.queryParams).subscribe({
+      next: (response) => {
+        this.deliveryPoints = response.items;
+        this.pageIndex = response.pageIndex;
+        this.totalPages = response.totalPages;
+        this.hasPreviousPage = response.hasPreviousPage;
+        this.hasNextPage = response.hasNextPage;
+      },
+      error: (err) => console.error('API error:', err),
+    });
   }
 
   onEdit = (element: DeliveryPoint) => {
@@ -51,4 +70,20 @@ export class DeliveryPointsList {
       error: (err) => console.error('Delete failed:', err),
     });
   };
+
+  onPageChange(event: PageEvent): void {
+    this.loadPage({
+      ...this.queryParams,
+      page: event.pageIndex + 1,
+      pageSize: event.pageSize,
+    });
+  }
+
+  onSearch(searchString: string): void {
+    this.loadPage({ ...this.queryParams, searchString, page: 1 });
+  }
+
+  onSort(orderBy: string, isDesc: boolean): void {
+    this.loadPage({ ...this.queryParams, orderBy, isDesc, page: 1 });
+  }
 }

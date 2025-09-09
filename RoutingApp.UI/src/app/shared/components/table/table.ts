@@ -1,12 +1,20 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-table',
-  imports: [MatProgressSpinnerModule, MatTableModule, RouterLink, MatIcon, MatIconModule],
+  imports: [
+    MatProgressSpinnerModule,
+    MatTableModule,
+    RouterLink,
+    MatIcon,
+    MatIconModule,
+    MatPaginator,
+  ],
   templateUrl: './table.html',
   styleUrl: './table.scss',
 })
@@ -23,6 +31,12 @@ export class Table<T extends { id: number }> {
   @Input() onDelete?: (id: number) => void;
   @Input() onEdit?: (item: T) => void;
   @Input() showActions = false;
+
+  @Input() showPagination = false;
+  @Input() pageIndex = 0;
+  @Input() pageSize = 10;
+  @Input() totalItems = 0;
+  @Output() pageChange = new EventEmitter<PageEvent>();
 
   get columnKeys(): string[] {
     const base = this.columns.map((c) => c.key.toString());

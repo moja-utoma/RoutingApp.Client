@@ -1,6 +1,15 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { QueryParamsModel } from '../../shared/models/query-params-model';
+
+export interface PaginatedResponse<T> {
+  pageIndex: number;
+  totalPages: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+  items: T[];
+}
 
 export interface CreateDeliveryPoint {
   id: number;
@@ -36,8 +45,16 @@ export class DeliveryPointsService {
   private http = inject(HttpClient);
   private apiUrl = 'https://localhost:7136/api/DeliveryPoints';
 
-  getAll(): Observable<DeliveryPoint[]> {
-    return this.http.get<DeliveryPoint[]>(this.apiUrl);
+  getAll(params?: QueryParamsModel): Observable<PaginatedResponse<DeliveryPoint>> {
+    let parsed = new HttpParams();
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          parsed = parsed.set(key, value.toString());
+        }
+      });
+    }
+    return this.http.get<PaginatedResponse<DeliveryPoint>>(this.apiUrl, { params: parsed });
   }
 
   getById(id: number): Observable<DeliveryPointDetails> {

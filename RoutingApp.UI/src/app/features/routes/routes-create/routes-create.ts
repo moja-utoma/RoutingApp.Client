@@ -79,8 +79,10 @@ export class RoutesCreate {
       this.deliveryPointsService.getAll().toPromise(),
     ])
       .then(([warehouses, deliveryPoints]) => {
-        this.warehouses = warehouses || [];
-        this.deliveryPoints = deliveryPoints || [];
+        this.warehouses = Array.isArray(warehouses) ? warehouses ?? [] : warehouses?.items ?? [];
+        this.deliveryPoints = Array.isArray(deliveryPoints)
+          ? deliveryPoints ?? []
+          : deliveryPoints?.items ?? [];
         this.loadingData = false;
       })
       .catch((err) => {

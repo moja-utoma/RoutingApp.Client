@@ -52,7 +52,7 @@ export class VehiclesCreate {
   private loadWarehouses() {
     this.warehousesService.getAll().subscribe({
       next: (data) => {
-        this.warehouses = data;
+        this.warehouses = data.items;
         this.loadingWarehouses = false;
       },
       error: (err) => {

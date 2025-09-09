@@ -1,7 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Vehicle } from '../vehicles/vehicles-service';
+import { QueryParamsModel } from '../../shared/models/query-params-model';
+import { PaginatedResponse } from '../delivery-points/delivery-points-service';
 
 export interface Warehouse {
   id: number;
@@ -37,8 +39,16 @@ export class WarehousesService {
   private http = inject(HttpClient);
   private apiUrl = 'https://localhost:7136/api/Warehouses';
 
-  getAll(): Observable<Warehouse[]> {
-    return this.http.get<Warehouse[]>(this.apiUrl);
+  getAll(params?: QueryParamsModel): Observable<PaginatedResponse<Warehouse>> {
+    let parsed = new HttpParams();
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          parsed = parsed.set(key, value.toString());
+        }
+      });
+    }
+    return this.http.get<PaginatedResponse<Warehouse>>(this.apiUrl, { params: parsed });
   }
 
   getById(id: number): Observable<WarehouseDetails> {
