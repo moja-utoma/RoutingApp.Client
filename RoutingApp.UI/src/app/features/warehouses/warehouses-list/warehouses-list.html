@@ -6,9 +6,9 @@
   [onEdit]="onEdit"
   [onDelete]="onDelete"
   [showPagination]="true"
-  [pageIndex]="pageIndex - 1"
+  [pageIndex]="queryParams.page - 1"
   [pageSize]="queryParams.pageSize"
-  [totalItems]="totalPages * queryParams.pageSize"
+  [totalItems]="totalCount"
   (pageChange)="onPageChange($event)"
 >
   <div><a routerLink="/warehouses/create">Create new warehouse</a></div>

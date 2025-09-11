@@ -13,13 +13,10 @@ import { PageEvent } from '@angular/material/paginator';
 })
 export class WarehousesList {
   private service = inject(WarehousesService);
-  warehouses: Warehouse[] = [];
   private router = inject(Router);
 
-  pageIndex = 1;
-  totalPages = 0;
-  hasPreviousPage = false;
-  hasNextPage = false;
+  warehouses: Warehouse[] = [];
+  totalCount = 0;
 
   queryParams = createDefaultQueryParams();
 
@@ -43,10 +40,7 @@ export class WarehousesList {
     this.service.getAll(this.queryParams).subscribe({
       next: (response) => {
         this.warehouses = response.items;
-        this.pageIndex = response.pageIndex;
-        this.totalPages = response.totalPages;
-        this.hasPreviousPage = response.hasPreviousPage;
-        this.hasNextPage = response.hasNextPage;
+        this.totalCount = response.totalCount;
       },
       error: (err) => console.error('API error:', err),
     });
@@ -60,8 +54,7 @@ export class WarehousesList {
     if (confirm('Are you sure you want to delete this warehouse?')) {
       this.service.delete(id).subscribe({
         next: () => {
-          this.warehouses = this.warehouses.filter((w) => w.id !== id);
-          console.log('Route deleted:', id);
+            this.loadPage(this.queryParams);
         },
         error: (err) => console.error('Delete failed:', err),
       });

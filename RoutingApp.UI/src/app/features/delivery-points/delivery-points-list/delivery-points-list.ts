@@ -22,13 +22,10 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 })
 export class DeliveryPointsList {
   private deliveryService = inject(DeliveryPointsService);
-  deliveryPoints: DeliveryPoint[] = [];
   private router = inject(Router);
 
-  pageIndex = 1;
-  totalPages = 0;
-  hasPreviousPage = false;
-  hasNextPage = false;
+  deliveryPoints: DeliveryPoint[] = [];
+  totalCount = 0;
 
   queryParams = createDefaultQueryParams();
 
@@ -52,10 +49,7 @@ export class DeliveryPointsList {
     this.deliveryService.getAll(this.queryParams).subscribe({
       next: (response) => {
         this.deliveryPoints = response.items;
-        this.pageIndex = response.pageIndex;
-        this.totalPages = response.totalPages;
-        this.hasPreviousPage = response.hasPreviousPage;
-        this.hasNextPage = response.hasNextPage;
+        this.totalCount = response.totalCount;
       },
       error: (err) => console.error('API error:', err),
     });
@@ -68,8 +62,7 @@ export class DeliveryPointsList {
   onDelete = (id: number) => {
     this.deliveryService.delete(id).subscribe({
       next: () => {
-        this.deliveryPoints = this.deliveryPoints.filter((dp) => dp.id !== id);
-        console.log('Deleted:', id);
+        this.loadPage(this.queryParams);
       },
       error: (err) => console.error('Delete failed:', err),
     });

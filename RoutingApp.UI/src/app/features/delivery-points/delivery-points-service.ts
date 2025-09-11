@@ -4,10 +4,7 @@ import { Observable } from 'rxjs';
 import { QueryParamsModel } from '../../shared/models/query-params-model';
 
 export interface PaginatedResponse<T> {
-  pageIndex: number;
-  totalPages: number;
-  hasPreviousPage: boolean;
-  hasNextPage: boolean;
+  totalCount: number;
   items: T[];
 }
 
