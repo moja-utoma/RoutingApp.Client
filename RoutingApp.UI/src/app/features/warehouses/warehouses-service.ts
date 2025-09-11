@@ -2,8 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Vehicle } from '../vehicles/vehicles-service';
-import { QueryParamsModel } from '../../shared/models/query-params-model';
-import { PaginatedResponse } from '../delivery-points/delivery-points-service';
+import { PaginatedResponse, QueryParamsModel } from '../../shared/models/request-respone-models';
 
 export interface Warehouse {
   id: number;

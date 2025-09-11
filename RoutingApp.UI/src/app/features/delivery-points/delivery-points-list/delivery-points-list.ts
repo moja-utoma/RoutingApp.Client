@@ -7,7 +7,10 @@ import {
 import { List } from '../../../shared/components/list/list';
 import { Table } from '../../../shared/components/table/table';
 import { Router, RouterLink } from '@angular/router';
-import { createDefaultQueryParams, QueryParamsModel } from '../../../shared/models/query-params-model';
+import {
+  createDefaultQueryParams,
+  QueryParamsModel,
+} from '../../../shared/models/request-respone-models';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { MatFormField, MatInput, MatLabel } from '@angular/material/input';

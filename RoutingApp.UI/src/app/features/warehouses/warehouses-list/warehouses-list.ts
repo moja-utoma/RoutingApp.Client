@@ -2,8 +2,12 @@ import { Component, inject } from '@angular/core';
 import { Warehouse, WarehousesService } from '../warehouses-service';
 import { Table } from '../../../shared/components/table/table';
 import { Router, RouterLink } from '@angular/router';
-import { createDefaultQueryParams, QueryParamsModel } from '../../../shared/models/query-params-model';
+import {
+  createDefaultQueryParams,
+  QueryParamsModel,
+} from '../../../shared/models/request-respone-models';
 import { PageEvent } from '@angular/material/paginator';
+import { Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-warehouses-list',
@@ -54,7 +58,7 @@ export class WarehousesList {
     if (confirm('Are you sure you want to delete this warehouse?')) {
       this.service.delete(id).subscribe({
         next: () => {
-            this.loadPage(this.queryParams);
+          this.loadPage(this.queryParams);
         },
         error: (err) => console.error('Delete failed:', err),
       });
@@ -73,7 +77,12 @@ export class WarehousesList {
     this.loadPage({ ...this.queryParams, searchString, page: 1 });
   }
 
-  onSort(orderBy: string, isDesc: boolean): void {
-    this.loadPage({ ...this.queryParams, orderBy, isDesc, page: 1 });
+  onSortChange(event: Sort): void {
+    this.loadPage({
+      ...this.queryParams,
+      orderBy: event.active,
+      isDesc: event.direction === 'desc',
+      page: 1,
+    });
   }
 }

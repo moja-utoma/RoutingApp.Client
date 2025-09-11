@@ -10,6 +10,10 @@
   [pageSize]="queryParams.pageSize"
   [totalItems]="totalCount"
   (pageChange)="onPageChange($event)"
+  [showSearch]="true"
+  (searchChange)="onSearch($event)"
+  [showSort]="true"
+  (sortChange)="onSortChange($event)"
 >
   <div><a routerLink="/warehouses/create">Create new warehouse</a></div>
 </app-table>

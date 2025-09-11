@@ -15,3 +15,8 @@ export function createDefaultQueryParams(): QueryParamsModel {
     pageSize: 10,
   };
 }
+
+export interface PaginatedResponse<T> {
+  totalCount: number;
+  items: T[];
+}

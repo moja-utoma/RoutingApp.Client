@@ -1,12 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { QueryParamsModel } from '../../shared/models/query-params-model';
-
-export interface PaginatedResponse<T> {
-  totalCount: number;
-  items: T[];
-}
+import { PaginatedResponse, QueryParamsModel } from '../../shared/models/request-respone-models';
 
 export interface CreateDeliveryPoint {
   id: number;
