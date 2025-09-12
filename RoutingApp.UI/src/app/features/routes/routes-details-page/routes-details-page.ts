@@ -6,10 +6,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouteDetails, RoutesService } from '../routes-service';
 import { ActivatedRoute } from '@angular/router';
+import { Map, MapPoint } from '../../../shared/components/map/map';
 
 @Component({
   selector: 'app-routes-details-page',
-  imports: [CommonModule, Table, MatCardModule, MatTabsModule, MatProgressSpinnerModule],
+  imports: [CommonModule, Table, MatCardModule, MatTabsModule, MatProgressSpinnerModule, Map],
   templateUrl: './routes-details-page.html',
   styleUrl: './routes-details-page.scss',
 })
@@ -34,6 +35,75 @@ export class RoutesDetailsPage {
     { key: 'coordinates', label: 'Coordinates' },
     { key: 'weight', label: 'Weight (kg)' },
   ];
+
+  calculating = false;
+
+  calculateRoute(): void {
+    if (!this.routeDetails) return;
+
+    this.calculating = true;
+
+    this.routesService.calculateRoute(this.routeDetails.id).subscribe({
+      next: (calc) => {
+        this.routeDetails!.calculatedRoute = calc;
+        //this.mapPoints = this.extractMapPoints(calc.calculation);
+        this.calculating = false;
+      },
+      error: (err) => {
+        console.error('Calculation error:', err);
+        this.error = 'Failed to calculate route';
+        this.calculating = false;
+      },
+    });
+  }
+
+  private extractMapPoints(calculationJson: string): MapPoint[] {
+    try {
+      const parsed = JSON.parse(calculationJson);
+      const clusters = parsed.clusters ?? [];
+
+      const points: MapPoint[] = [];
+
+      for (const cluster of clusters) {
+        for (const route of cluster.routes) {
+          for (const point of route) {
+            points.push({
+              lat: point.latitude,
+              lng: point.longitude,
+              popup: `ID: ${point.id}, Order: ${point.order}`,
+            });
+          }
+        }
+      }
+
+      return points;
+    } catch (e) {
+      console.error('Failed to parse calculation JSON:', e);
+      return [];
+    }
+  }
+
+  get mapPoints(): MapPoint[] {
+    if (this.routeDetails?.calculatedRoute?.calculation) {
+      return this.extractMapPoints(this.routeDetails.calculatedRoute.calculation);
+    }
+
+    const warehousePoints =
+      this.routeDetails?.warehouses.map((w) => ({
+        lat: w.latitude,
+        lng: w.longitude,
+        popup: `Warehouse: ${w.name}`,
+      })) ?? [];
+
+    const deliveryPoints =
+      this.routeDetails?.deliveryPoints.map((dp) => ({
+        lat: dp.latitude,
+        lng: dp.longitude,
+        popup: `Delivery Point: ${dp.name}`,
+      })) ?? [];
+
+    return [...warehousePoints, ...deliveryPoints];
+  }
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));

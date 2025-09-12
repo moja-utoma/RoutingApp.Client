@@ -27,11 +27,19 @@ export interface DeliveryPointDetails extends PointDetails {
   weight: number;
 }
 
+export interface CalculatedRoute {
+  id: number;
+  routeId: number;
+  calculation: string;
+  createdAt: string; // ISO date string from backend
+}
+
 export interface RouteDetails {
   id: number;
   name: string;
   warehouses: WarehouseDetails[];
   deliveryPoints: DeliveryPointDetails[];
+  calculatedRoute: CalculatedRoute | null;
 }
 
 export interface CreateRoute {
@@ -66,5 +74,9 @@ export class RoutesService {
 
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  calculateRoute(id: number): Observable<CalculatedRoute> {
+    return this.http.post<CalculatedRoute>(`${this.apiUrl}/Calculate/${id}`, {});
   }
 }

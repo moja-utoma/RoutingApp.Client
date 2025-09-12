@@ -16,6 +16,16 @@
   <p><strong>Delivery Points:</strong> {{ routeDetails.deliveryPoints.length }}</p>
   <p><strong>Total Weight:</strong> {{ getTotalWeight() }} kg</p>
 
+  <button mat-raised-button color="primary" (click)="calculateRoute()" [disabled]="calculating">
+    {{ calculating ? 'Calculating...' : 'Calculate Route' }}
+  </button>
+
+  @if (mapPoints.length > 0) {
+  <div class="map-section">
+    <app-map [points]="mapPoints"></app-map>
+  </div>
+  }
+
   <mat-tab-group class="route-tabs">
     <mat-tab label="Warehouses ({{ routeDetails.warehouses.length }})">
       <div class="tab-content">
