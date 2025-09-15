@@ -37,13 +37,23 @@ function getClusterColor(index: number): string {
   return clusterColors[index % clusterColors.length];
 }
 
+const defaultCoords: {
+  coords: [number, number];
+  zoom: number;
+} = {
+  coords: [50.4501, 30.5234],
+  zoom: 12,
+};
+
+const defaultIconSize: L.PointExpression = [40, 41];
+
 @Component({
   selector: 'app-map',
   imports: [],
-  templateUrl: './map.html',
-  styleUrl: './map.scss',
+  templateUrl: './map-view.html',
+  styleUrl: './map-view.scss',
 })
-export class Map implements OnChanges, AfterViewInit {
+export class MapView implements OnChanges, AfterViewInit {
   //mapView
   @ViewChild('mapEl', { static: true }) private mapEl!: ElementRef<HTMLDivElement>;
 
@@ -64,7 +74,7 @@ export class Map implements OnChanges, AfterViewInit {
   }
 
   private initMap(): void {
-    this.map = L.map(this.mapEl.nativeElement).setView([50.4501, 30.5234], 12);
+    this.map = L.map(this.mapEl.nativeElement).setView(defaultCoords.coords, defaultCoords.zoom);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
@@ -81,10 +91,11 @@ export class Map implements OnChanges, AfterViewInit {
 
     const routeGroups: MapPoint[][] = [];
 
+    console.log(this.points);
     this.points.forEach((p) => {
       const icon = p.isWarehouse
-        ? L.icon({ iconUrl: 'icons/warehouse.png', iconSize: [40, 41] })
-        : L.icon({ iconUrl: 'icons/delivery.png', iconSize: [40, 41] });
+        ? L.icon({ iconUrl: 'icons/warehouse.png', iconSize: defaultIconSize })
+        : L.icon({ iconUrl: 'icons/delivery.png', iconSize: defaultIconSize });
 
       const marker = L.marker([p.lat, p.lng], { icon });
       if (p.popup) marker.bindPopup(p.popup);
@@ -97,15 +108,13 @@ export class Map implements OnChanges, AfterViewInit {
       }
     });
 
-    // Draw polylines for each connected route group
     routeGroups.forEach((groupPoints, index) => {
       const sorted = [...groupPoints].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
       const latlngs: L.LatLngTuple[] = sorted.map((p) => [p.lat, p.lng] as L.LatLngTuple);
-      L.polyline(latlngs, {
-        color: getClusterColor(index),
-        weight: 4,
-        opacity: 0.8,
-      }).addTo(this.map!);
+      this.drawRoadRoute(
+        latlngs.map(([lat, lng]) => [lng, lat]),
+        getClusterColor(index)
+      );
     });
 
     if (this.markers.length === 1) {
@@ -116,5 +125,36 @@ export class Map implements OnChanges, AfterViewInit {
     }
 
     setTimeout(() => this.map?.invalidateSize(), 0);
+  }
+
+  private async drawRoadRoute(coords: [number, number][], color: string): Promise<void> {
+    try {
+      // move into service
+      const response = await fetch('https://localhost:7136/api/Routes/ors', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ coordinates: coords, radiuses: coords.map(() => 1000) }),
+      });
+
+      if (!response.ok) {
+        console.error('Proxy request failed:', response.statusText);
+        return;
+      }
+
+      const geojson = await response.json();
+      console.log('geojson', geojson);
+
+      L.geoJSON(geojson, {
+        style: {
+          color,
+          weight: 4,
+          opacity: 0.9,
+        },
+      }).addTo(this.map!);
+    } catch (error) {
+      console.error('Proxy routing error:', error);
+    }
   }
 }

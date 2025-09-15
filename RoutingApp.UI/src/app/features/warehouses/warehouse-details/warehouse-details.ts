@@ -2,11 +2,11 @@ import { Component, inject } from '@angular/core';
 import { WarehouseDetails, WarehousesService } from '../warehouses-service';
 import { ActivatedRoute } from '@angular/router';
 import { Table } from '../../../shared/components/table/table';
-import { Map, MapPoint } from '../../../shared/components/map/map';
+import { MapView, MapPoint } from '../../../shared/components/map-view/map-view';
 
 @Component({
   selector: 'app-warehouse-details',
-  imports: [Table, Map],
+  imports: [Table, MapView],
   templateUrl: './warehouse-details.html',
   styleUrl: './warehouse-details.scss',
 })

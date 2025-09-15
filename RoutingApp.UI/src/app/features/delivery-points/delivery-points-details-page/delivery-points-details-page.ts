@@ -2,12 +2,12 @@ import { Component, inject } from '@angular/core';
 import { Table } from '../../../shared/components/table/table';
 import { DeliveryPointDetails, DeliveryPointsService } from '../delivery-points-service';
 import { ActivatedRoute } from '@angular/router';
-import { Map, MapPoint } from '../../../shared/components/map/map';
+import { MapView, MapPoint } from '../../../shared/components/map-view/map-view';
 import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-delivery-points-details-page',
-  imports: [Map, DecimalPipe],
+  imports: [MapView, DecimalPipe],
   templateUrl: './delivery-points-details-page.html',
   styleUrl: './delivery-points-details-page.scss',
 })

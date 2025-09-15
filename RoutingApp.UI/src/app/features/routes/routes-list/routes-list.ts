@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Table } from '../../../shared/components/table/table';
 import { Route, RoutesService } from '../routes-service';
-import { MapPoint } from '../../../shared/components/map/map';
+import { MapPoint } from '../../../shared/components/map-view/map-view';
 import { Router, RouterLink } from '@angular/router';
 
 @Component({
