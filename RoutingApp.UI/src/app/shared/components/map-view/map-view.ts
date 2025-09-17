@@ -2,8 +2,10 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnChanges,
+  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -58,9 +60,13 @@ export class MapView implements OnChanges, AfterViewInit {
   @ViewChild('mapEl', { static: true }) private mapEl!: ElementRef<HTMLDivElement>;
 
   @Input() points: MapPoint[] = [];
+  @Input() enableClickToAdd: boolean = false;
+
+  @Output() newPoint = new EventEmitter<MapPoint>();
 
   private map?: L.Map;
   private markers: L.Marker[] = [];
+  private tempMarker?: L.Marker;
 
   ngAfterViewInit(): void {
     this.initMap();
@@ -81,13 +87,50 @@ export class MapView implements OnChanges, AfterViewInit {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(this.map);
+
+    if (this.enableClickToAdd) {
+      this.map.on('click', async (e: L.LeafletMouseEvent) => {
+        const { lat, lng } = e.latlng;
+        const address = await this.reverseGeocode(lat, lng);
+        console.log('Clicked:', { lat, lng, address });
+
+        // Remove previous temp marker
+        if (this.tempMarker) {
+          this.map!.removeLayer(this.tempMarker);
+        }
+
+        // Add new marker
+        this.tempMarker = L.marker([lat, lng], {
+          icon: L.icon({ iconUrl: 'icons/delivery.png', iconSize: defaultIconSize }),
+        }).addTo(this.map!);
+        this.tempMarker.bindPopup(address).openPopup();
+
+        this.handleNewPoint({ lat, lng, popup: address });
+      });
+    }
+  }
+
+  private async reverseGeocode(lat: number, lng: number): Promise<string> {
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`
+      );
+      const data = await res.json();
+      return data.display_name || 'Unknown address';
+    } catch (err) {
+      console.error('Geocoding error:', err);
+      return 'Address lookup failed';
+    }
+  }
+
+  private handleNewPoint(point: MapPoint): void {
+    this.newPoint.emit(point);
   }
 
   private refreshMarkers(): void {
     if (!this.map) return;
 
-    this.markers.forEach((m) => m.remove());
-    this.markers = [];
+    this.clearAllMarkers();
 
     const routeGroups: MapPoint[][] = [];
 
@@ -156,5 +199,15 @@ export class MapView implements OnChanges, AfterViewInit {
     } catch (error) {
       console.error('Proxy routing error:', error);
     }
+  }
+
+  clearAllMarkers(): void {
+    this.markers.forEach((m) => m.remove());
+    this.markers = [];
+
+    // if (this.tempMarker) {
+    //   this.map?.removeLayer(this.tempMarker);
+    //   this.tempMarker = undefined;
+    // }
   }
 }

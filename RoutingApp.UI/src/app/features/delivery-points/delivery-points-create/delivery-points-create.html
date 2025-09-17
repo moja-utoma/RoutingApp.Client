@@ -26,6 +26,8 @@
     <input matInput type="number" formControlName="weight" />
   </mat-form-field>
 
+  <app-map [points]="mapPoints" (newPoint)="onMapClick($event)" [enableClickToAdd]="true"></app-map>
+
   <button mat-raised-button color="primary" type="submit" [disabled]="submitting || form.invalid">
     Create
   </button>
