@@ -111,10 +111,13 @@ export class MapView implements OnChanges, AfterViewInit {
   }
 
   private async reverseGeocode(lat: number, lng: number): Promise<string> {
+    const layer = 'address,poi,manmade'; // 🎯 You can adjust this list as needed
+    const featureType = 'settlement'; // 🏙 Focus on inhabited places
+
+    const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&layer=${layer}&featureType=${featureType}`;
+
     try {
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`
-      );
+      const res = await fetch(url);
       const data = await res.json();
       return data.display_name || 'Unknown address';
     } catch (err) {
