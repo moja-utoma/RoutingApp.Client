@@ -69,71 +69,47 @@ export class DeliveryPointsCreate {
         });
       }
     });
+  }
 
-    this.form
-      .get('address')
-      ?.valueChanges.pipe(
-        filter((value) => value.trim().length > 5),
-        debounceTime(1000),
-        distinctUntilChanged()
-      )
-      .subscribe((value: string) => {
-        this.searchAddress(value.trim());
-      });
+  onSearchClick(): void {
+    const query = this.form.get('address')?.value?.trim();
+    if (!query || query.length < 5) {
+      alert('Please enter a valid address');
+      return;
+    }
+
+    this.searchAddress(query);
   }
 
   searchAddress(query: string) {
-    const encoded = encodeURIComponent(query);
-    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encoded}`;
+    this.deliveryService
+      .searchAddress(query)
+      .pipe(
+        catchError((err) => {
+          console.error('Address search failed', err);
+          return of(null);
+        })
+      )
+      .subscribe((location) => {
+        if (!location) return;
 
-     this.http
-       .get<any[]>(url)
-       .pipe(
-         map((results) => {
-          if (!results.length) return null;
+        console.log(location);
 
-          const result = results[0];
-          const lat = parseFloat(result.lat);
-          const lng = parseFloat(result.lon);
-           const addr = result.address ?? {};
-           console.log(result);
+        const point: MapPoint = {
+          lat: location.lat,
+          lng: location.lng,
+          popup: location.fullAddress,
+        };
+        console.log('point', point);
 
-          const street = addr.road || addr.pedestrian || addr.street || addr.residential || '';
-          const number = addr.house_number || '';
-          const city = addr.city || addr.town || addr.village || '';
+        this.mapPoints = [point];
 
-          const shortAddress =
-            [street, number, city].filter(Boolean).join(', ') || result.display_name;
-
-           return {
-             lat,
-             lng,
-             address: shortAddress,
-             fullAddress: result.display_name,
-           };
-         }),
-         catchError((err) => {
-           console.error('Address search failed', err);
-           return of(null);
-         })
-       )
-       .subscribe((location) => {
-         if (!location) return;
-
-         const point: MapPoint = {
-           lat: location.lat,
-           lng: location.lng,
-           popup: location.fullAddress,
-         };
-
-         this.mapPoints = [point];
-
-         this.form.patchValue({
-           latitude: location.lat,
-           longitude: location.lng,
-           address: location.address,
-         });
-       });
+        this.form.patchValue({
+          latitude: location.lat,
+          longitude: location.lng,
+          address: location.address,
+        });
+      });
   }
 
   onSubmit() {

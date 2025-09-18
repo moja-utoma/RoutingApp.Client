@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { from, Observable, switchMap, tap } from 'rxjs';
+import { from, map, Observable, switchMap, tap } from 'rxjs';
 import { PaginatedResponse, QueryParamsModel } from '../../shared/models/request-respone-models';
 import { environment } from '../../../environments/environment';
 import { MsalService } from '@azure/msal-angular';
@@ -54,7 +54,6 @@ export class DeliveryPointsService {
         account: account,
       })
     ).pipe(
-      tap((res) => console.log('JWT token being sent:', res.accessToken)), // <-- one-liner to log the token
       switchMap((res) => {
         // Step 2: Build query params
         let parsed = new HttpParams();
@@ -102,5 +101,20 @@ export class DeliveryPointsService {
 
   delete(id: number): Observable<void> {
     return this.http.delete<void>(this.apiUrl + `/${id}`);
+  }
+
+  searchAddress(
+    query: string
+  ): Observable<{ lat: number; lng: number; address: string; fullAddress: string }> {
+    const encoded = encodeURIComponent(query);
+    const url = `${environment.api.baseUrl}/api/Ors/search?text=${encoded}`;
+    return this.http.get<any>(url).pipe(
+      map((res) => ({
+        lat: res.latitude,
+        lng: res.longitude,
+        address: res.address,
+        fullAddress: res.fullAddress,
+      }))
+    );
   }
 }

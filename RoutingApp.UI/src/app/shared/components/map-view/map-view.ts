@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  inject,
   Input,
   OnChanges,
   Output,
@@ -11,6 +12,9 @@ import {
 } from '@angular/core';
 import * as L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { firstValueFrom, Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
+import { HttpClient } from '@angular/common/http';
 
 export interface MapPoint {
   lat: number;
@@ -67,6 +71,7 @@ export class MapView implements OnChanges, AfterViewInit {
   private map?: L.Map;
   private markers: L.Marker[] = [];
   private tempMarker?: L.Marker;
+  private http = inject(HttpClient);
 
   ngAfterViewInit(): void {
     this.initMap();
@@ -110,17 +115,9 @@ export class MapView implements OnChanges, AfterViewInit {
     }
   }
 
-  private async reverseGeocode(lat: number, lng: number): Promise<string> {
-    try {
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`
-      );
-      const data = await res.json();
-      return data.display_name || 'Unknown address';
-    } catch (err) {
-      console.error('Geocoding error:', err);
-      return 'Address lookup failed';
-    }
+  reverseGeocode(lat: number, lng: number): Promise<string> {
+    const url = `${environment.api.baseUrl}/api/Ors/reverse?lat=${lat}&lng=${lng}`;
+    return firstValueFrom(this.http.get(url, { responseType: 'text' }));
   }
 
   private handleNewPoint(point: MapPoint): void {
