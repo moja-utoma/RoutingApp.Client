@@ -38,16 +38,20 @@ export class DeliveryPointsCreate {
   mapPoints: MapPoint[] = [];
 
   onMapClick(point: MapPoint): void {
-    //if (this.editMode) return;
+  this.form.patchValue({
+    latitude: point.lat,
+    longitude: point.lng,
+    address: point.popup ?? '', // still stores short address internally
+  });
 
-    this.form.patchValue({
-      latitude: point.lat,
-      longitude: point.lng,
-      address: point.popup ?? '',
-    });
+  // Ensure popup always shows full address
+  this.mapPoints = [{
+    lat: point.lat,
+    lng: point.lng,
+    popup: point.popup, // already fullAddress from searchAddress
+  }];
+}
 
-    this.mapPoints = [point];
-  }
 
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {

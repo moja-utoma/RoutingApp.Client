@@ -96,7 +96,8 @@ export class MapView implements OnChanges, AfterViewInit {
     if (this.enableClickToAdd) {
       this.map.on('click', async (e: L.LeafletMouseEvent) => {
         const { lat, lng } = e.latlng;
-        const address = await this.reverseGeocode(lat, lng);
+        const point = await this.reverseGeocode(lat, lng);
+        const address = point.fullAddress;
         console.log('Clicked:', { lat, lng, address });
 
         // Remove previous temp marker
@@ -115,9 +116,24 @@ export class MapView implements OnChanges, AfterViewInit {
     }
   }
 
-  reverseGeocode(lat: number, lng: number): Promise<string> {
+  reverseGeocode(
+    lat: number,
+    lng: number
+  ): Promise<{
+    fullAddress: string;
+    address: string;
+    latitude: number;
+    longitude: number;
+  }> {
     const url = `${environment.api.baseUrl}/api/Ors/reverse?lat=${lat}&lng=${lng}`;
-    return firstValueFrom(this.http.get(url, { responseType: 'text' }));
+    return firstValueFrom(
+      this.http.get<{
+        fullAddress: string;
+        address: string;
+        latitude: number;
+        longitude: number;
+      }>(url)
+    );
   }
 
   private handleNewPoint(point: MapPoint): void {
