@@ -4,6 +4,7 @@ import { from, map, Observable, switchMap, tap } from 'rxjs';
 import { PaginatedResponse, QueryParamsModel } from '../../shared/models/request-respone-models';
 import { environment } from '../../../environments/environment';
 import { MsalService } from '@azure/msal-angular';
+import { AuthService } from '@auth0/auth0-angular';
 
 export interface CreateDeliveryPoint {
   id: number;
@@ -39,23 +40,12 @@ export class DeliveryPointsService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.api.baseUrl}/api/DeliveryPoints`;
 
-  constructor(private msalService: MsalService) {}
+  constructor(private auth: AuthService) {}
 
   getAll(params?: QueryParamsModel): Observable<PaginatedResponse<DeliveryPoint>> {
-    // Step 1: Acquire token silently
-    const account = this.msalService.instance.getActiveAccount();
-    if (!account) {
-      throw new Error('No active MSAL account. User must log in first.');
-    }
-
-    return from(
-      this.msalService.acquireTokenSilent({
-        scopes: [environment.api.scope],
-        account: account,
-      })
-    ).pipe(
-      switchMap((res) => {
-        // Step 2: Build query params
+    return this.auth.getAccessTokenSilently().pipe(
+      switchMap((accessToken) => {
+        // Step 1: Build query params
         let parsed = new HttpParams();
         if (params) {
           Object.entries(params).forEach(([key, value]) => {
@@ -65,14 +55,49 @@ export class DeliveryPointsService {
           });
         }
 
-        // Step 3: Make the actual HTTP request with Authorization header
+        // Step 2: Make the actual HTTP request with Authorization header
         return this.http.get<PaginatedResponse<DeliveryPoint>>(this.apiUrl, {
           params: parsed,
-          headers: { Authorization: `Bearer ${res.accessToken}` },
+          headers: { Authorization: `Bearer ${accessToken}` },
         });
       })
     );
   }
+
+  // constructor(private msalService: MsalService) {}
+
+  // getAll(params?: QueryParamsModel): Observable<PaginatedResponse<DeliveryPoint>> {
+  //   // Step 1: Acquire token silently
+  //   const account = this.msalService.instance.getActiveAccount();
+  //   if (!account) {
+  //     throw new Error('No active MSAL account. User must log in first.');
+  //   }
+
+  //   return from(
+  //     this.msalService.acquireTokenSilent({
+  //       scopes: [environment.api.scope],
+  //       account: account,
+  //     })
+  //   ).pipe(
+  //     switchMap((res) => {
+  //       // Step 2: Build query params
+  //       let parsed = new HttpParams();
+  //       if (params) {
+  //         Object.entries(params).forEach(([key, value]) => {
+  //           if (value !== undefined && value !== null) {
+  //             parsed = parsed.set(key, value.toString());
+  //           }
+  //         });
+  //       }
+
+  //       // Step 3: Make the actual HTTP request with Authorization header
+  //       return this.http.get<PaginatedResponse<DeliveryPoint>>(this.apiUrl, {
+  //         params: parsed,
+  //         headers: { Authorization: `Bearer ${res.accessToken}` },
+  //       });
+  //     })
+  //   );
+  // }
 
   // getAll(params?: QueryParamsModel): Observable<PaginatedResponse<DeliveryPoint>> {
   //   let parsed = new HttpParams();

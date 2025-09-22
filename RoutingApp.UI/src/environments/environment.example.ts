@@ -16,3 +16,10 @@ export const environment = {
     scope: '',
   },
 };
+
+export const envAuth0 = {
+  domain: '',
+  clientId: '',
+  audience: 'api link',
+  redirectUri: '',
+};
