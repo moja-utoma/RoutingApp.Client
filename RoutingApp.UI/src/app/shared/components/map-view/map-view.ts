@@ -15,6 +15,7 @@ import 'leaflet/dist/leaflet.css';
 import { firstValueFrom, Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { RoutesService } from '../../../features/routes/routes-service';
 
 export interface MapPoint {
   lat: number;
@@ -72,6 +73,7 @@ export class MapView implements OnChanges, AfterViewInit {
   private markers: L.Marker[] = [];
   private tempMarker?: L.Marker;
   private http = inject(HttpClient);
+  private routeService = inject(RoutesService);
 
   ngAfterViewInit(): void {
     this.initMap();
@@ -82,6 +84,35 @@ export class MapView implements OnChanges, AfterViewInit {
     if (this.map && changes['points']) {
       this.refreshMarkers();
     }
+  }
+
+  private movingMarker?: L.CircleMarker;
+
+  startRouteStream(coords: [number, number][]): void {
+    const body = {
+      coordinates: coords,
+      radiuses: coords.map(() => 1000),
+    };
+
+    this.routeService.streamRoute(body).subscribe({
+      next: ({ lat, lng }) => {
+        const point: L.LatLngExpression = [lat, lng];
+
+        if (!this.movingMarker) {
+          this.movingMarker = L.circleMarker(point, {
+            radius: 6,
+            color: 'red',
+            fillColor: 'red',
+            fillOpacity: 0.8,
+          }).addTo(this.map!);
+        } else {
+          this.movingMarker.setLatLng(point);
+        }
+      },
+      error: (err) => {
+        console.error('Streaming error:', err);
+      },
+    });
   }
 
   private initMap(): void {
@@ -184,34 +215,25 @@ export class MapView implements OnChanges, AfterViewInit {
   }
 
   private async drawRoadRoute(coords: [number, number][], color: string): Promise<void> {
-    try {
-      // move into service
-      const response = await fetch('https://localhost:7136/api/Routes/ors', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ coordinates: coords, radiuses: coords.map(() => 1000) }),
-      });
+    const body = {
+      coordinates: coords,
+      radiuses: coords.map(() => 1000),
+    };
 
-      if (!response.ok) {
-        console.error('Proxy request failed:', response.statusText);
-        return;
-      }
-
-      const geojson = await response.json();
-      console.log('geojson', geojson);
-
-      L.geoJSON(geojson, {
-        style: {
-          color,
-          weight: 4,
-          opacity: 0.9,
-        },
-      }).addTo(this.map!);
-    } catch (error) {
-      console.error('Proxy routing error:', error);
-    }
+    this.http.post('https://localhost:7136/api/Ors/route', body).subscribe({
+      next: (geojson: any) => {
+        L.geoJSON(geojson, {
+          style: {
+            color,
+            weight: 4,
+            opacity: 0.9,
+          },
+        }).addTo(this.map!);
+      },
+      error: (err) => {
+        console.error('Proxy routing error:', err);
+      },
+    });
   }
 
   clearAllMarkers(): void {

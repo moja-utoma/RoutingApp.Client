@@ -20,9 +20,14 @@
     {{ calculating ? 'Calculating...' : 'Calculate Route' }}
   </button>
 
+  <button mat-raised-button color="primary" (click)="startStreamingMovement()">
+  Simulate Vehicle Movement
+</button>
+
+
   @if (mapPoints.length > 0) {
   <div class="map-section">
-    <app-map [points]="mapPoints"></app-map>
+    <app-map #mapView [points]="mapPoints"></app-map>
   </div>
   }
 

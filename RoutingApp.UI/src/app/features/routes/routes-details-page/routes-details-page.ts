@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
@@ -27,6 +27,8 @@ export class RoutesDetailsPage {
 
   private _mapPoints: MapPoint[] = [];
 
+  @ViewChild('mapView') private mapView?: MapView;
+
   warehouseColumns = [
     { key: 'name', label: 'Warehouse Name' },
     { key: 'address', label: 'Address' },
@@ -52,6 +54,20 @@ export class RoutesDetailsPage {
     } else {
       this.error = 'Invalid route ID';
       this.loading = false;
+    }
+  }
+
+  startStreamingMovement(): void {
+    const connectedPoints = this.mapPoints
+      .filter((p) => p.isConnected && p.group === 0)
+      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
+    const coords: [number, number][] = connectedPoints.map((p) => [p.lng, p.lat]);
+
+    if (this.mapView) {
+      this.mapView.startRouteStream(coords);
+    } else {
+      console.warn('MapView not available');
     }
   }
 
@@ -106,7 +122,7 @@ export class RoutesDetailsPage {
 
       let routeGroupIndex = 0;
 
-      clusters.forEach((cluster: { warehouse_id: any; routes: any[][]; }) => {
+      clusters.forEach((cluster: { warehouse_id: any; routes: any[][] }) => {
         const warehouseId = cluster.warehouse_id;
         usedWarehouseIds.add(warehouseId);
 
