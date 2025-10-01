@@ -88,35 +88,54 @@ export class MapView implements OnChanges, AfterViewInit {
 
   private movingMarker?: L.CircleMarker;
 
-  startRouteStream(coords: [number, number][]): void {
+  private readonly markerOptions: L.CircleMarkerOptions = {
+    radius: 6,
+    color: 'red',
+    fillColor: 'red',
+    fillOpacity: 0.8,
+    pane: 'movingMarkerPane',
+  };
+
+  startRouteStream(routeId: number, coords: [number, number][]): void {
     const body = {
       coordinates: coords,
       radiuses: coords.map(() => 1000),
     };
 
-    this.routeService.streamRoute(body).subscribe({
-      next: ({ lat, lng }) => {
-        const point: L.LatLngExpression = [lat, lng];
-
-        if (!this.movingMarker) {
-          this.movingMarker = L.circleMarker(point, {
-            radius: 6,
-            color: 'red',
-            fillColor: 'red',
-            fillOpacity: 0.8,
-          }).addTo(this.map!);
-        } else {
-          this.movingMarker.setLatLng(point);
-        }
-      },
-      error: (err) => {
-        console.error('Streaming error:', err);
-      },
+    this.routeService.streamRoute(routeId, body).subscribe({
+      next: ({ lat, lng }) => this.updateMovingMarker([lat, lng]),
+      error: (err) => console.error('Streaming error:', err),
+      complete: () => this.removeMovingMarker(),
     });
+  }
+
+  updateMovingMarker(point: [number, number]): void {
+    if (!this.map) {
+      console.warn('Map is not initialized');
+      return;
+    }
+
+    console.log('Updating marker at:', point);
+
+    if (!this.movingMarker) {
+      this.movingMarker = L.circleMarker(point, this.markerOptions).addTo(this.map);
+    } else {
+      this.movingMarker.setLatLng(point);
+    }
+  }
+
+  removeMovingMarker(): void {
+    if (this.movingMarker) {
+      this.map?.removeLayer(this.movingMarker);
+      this.movingMarker = undefined;
+    }
   }
 
   private initMap(): void {
     this.map = L.map(this.mapEl.nativeElement).setView(defaultCoords.coords, defaultCoords.zoom);
+
+    this.map.createPane('movingMarkerPane');
+    this.map.getPane('movingMarkerPane')!.style.zIndex = '650';
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,

@@ -60,13 +60,20 @@ export class RoutesService {
 
   constructor(private auth: AuthService) {}
 
-  streamRoute(body: {
-    coordinates: [number, number][];
-    radiuses: number[];
-  }): Observable<{ lat: number; lng: number }> {
-    const url = `https://localhost:7136/api/Ors/stream`;
+  streamRoute(
+    routeId: number,
+    body: {
+      coordinates: [number, number][];
+      radiuses: number[];
+    }
+  ): Observable<{ lat: number; lng: number }> {
+    const baseUrl = `https://localhost:7136/api/Ors/stream/${routeId}`;
+    const lastTimestamp = localStorage.getItem(`sse-${routeId}-lastTimestamp`);
+    const url = lastTimestamp ? `${baseUrl}?since=${encodeURIComponent(lastTimestamp)}` : baseUrl;
 
     return new Observable((observer) => {
+      const controller = new AbortController();
+
       this.auth
         .getAccessTokenSilently({
           authorizationParams: {
@@ -80,9 +87,10 @@ export class RoutesService {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`, // ✅ Injected here
+                Authorization: `Bearer ${token}`,
               },
               body: JSON.stringify(body),
+              signal: controller.signal,
             })
               .then((response) => {
                 const reader = response.body?.getReader();
@@ -97,16 +105,25 @@ export class RoutesService {
                     }
 
                     buffer += decoder.decode(value, { stream: true });
-                    const lines = buffer.split('\n\n');
-                    buffer = lines.pop() ?? '';
+                    const chunks = buffer.split('\n\n');
+                    buffer = chunks.pop() ?? '';
 
-                    for (const line of lines) {
-                      if (line.startsWith('data:')) {
+                    for (const chunk of chunks) {
+                      const lines = chunk.split('\n');
+                      const idLine = lines.find((l) => l.startsWith('id:'));
+                      const dataLine = lines.find((l) => l.startsWith('data:'));
+
+                      if (idLine) {
+                        const timestamp = idLine.slice(3).trim();
+                        localStorage.setItem(`sse-${routeId}-lastTimestamp`, timestamp);
+                      }
+
+                      if (dataLine) {
                         try {
-                          const json = JSON.parse(line.slice(5).trim());
+                          const json = JSON.parse(dataLine.slice(5).trim());
                           observer.next(json);
                         } catch (e) {
-                          console.warn('Failed to parse SSE line:', line);
+                          console.warn('Failed to parse SSE data:', dataLine);
                         }
                       }
                     }
@@ -121,6 +138,9 @@ export class RoutesService {
           },
           error: (err) => observer.error(err),
         });
+
+      // Optional: cleanup on unsubscribe
+      return () => controller.abort();
     });
   }
 

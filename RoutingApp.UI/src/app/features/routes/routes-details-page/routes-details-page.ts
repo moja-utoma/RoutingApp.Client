@@ -8,6 +8,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { Table } from '../../../shared/components/table/table';
 import { MapView, MapPoint } from '../../../shared/components/map-view/map-view';
 import { RouteDetails, RoutesService } from '../routes-service';
+import { RouteStreamManagerService } from '../../../shared/services/route-stream-manager-service';
 
 @Component({
   selector: 'app-routes-details-page',
@@ -19,6 +20,7 @@ import { RouteDetails, RoutesService } from '../routes-service';
 export class RoutesDetailsPage {
   private routesService = inject(RoutesService);
   private route = inject(ActivatedRoute);
+  private streamManager = inject(RouteStreamManagerService);
 
   routeDetails?: RouteDetails;
   loading = true;
@@ -47,13 +49,37 @@ export class RoutesDetailsPage {
     return this._mapPoints;
   }
 
+  private hasInitializedStream = false;
+  private routeId?: number;
+
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (!isNaN(id)) {
+      this.routeId = id;
       this.loadRouteDetails(id);
     } else {
       this.error = 'Invalid route ID';
       this.loading = false;
+    }
+  }
+
+  ngAfterViewChecked(): void {
+    if (!this.hasInitializedStream && this.mapView && this.routeId != null) {
+      this.streamManager.setMapView(this.routeId, this.mapView);
+      this.hasInitializedStream = true;
+      //this.streamManager.resumeStreamIfAvailable();
+    }
+  }
+
+  ngAfterViewInit(): void {
+    if (this.routeId != null) {
+      this.streamManager.resumeStream(this.routeId);
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.routeId != null) {
+      this.streamManager.stopStream(this.routeId);
     }
   }
 
@@ -63,12 +89,13 @@ export class RoutesDetailsPage {
       .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
     const coords: [number, number][] = connectedPoints.map((p) => [p.lng, p.lat]);
+    const body = {
+      coordinates: coords,
+      radiuses: coords.map(() => 1000),
+    };
 
-    if (this.mapView) {
-      this.mapView.startRouteStream(coords);
-    } else {
-      console.warn('MapView not available');
-    }
+    this.streamManager.setMapView(this.routeId!, this.mapView!);
+    this.streamManager.startStream(this.routeDetails!.id, body);
   }
 
   private loadRouteDetails(id: number): void {
