@@ -1,4 +1,4 @@
-name: Deploy Angular App to Azure
+name: Angular App to Azure
 
 on:
   push:
@@ -24,16 +24,13 @@ jobs:
         run: |
           echo "Branch: ${{ github.ref }}"
 
-      - name: List environment files
-        run: ls -la src/environments
-
       - name: Copy environment file
         run: cp src/environments/environment.example.ts src/environments/environment.ts
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '22.14.0'
+          node-version: "22.14.0"
 
       - name: Install dependencies
         run: npm ci
@@ -41,12 +38,9 @@ jobs:
       - name: Build the Angular app
         run: npm run build
 
-      - name: Check dist output
-        run: ls -la dist
-
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'routing-app-ui'
+          app-name: "routing-app-ui"
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: dist/RoutingApp.UI
+          package: dist/RoutingApp.UI/browser
