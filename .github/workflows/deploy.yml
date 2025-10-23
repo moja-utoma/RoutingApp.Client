@@ -16,14 +16,19 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
-         ref: ${{ github.ref }}
+          ref: ${{ github.ref }}
 
-      - name: Show Git info
+      - name: Show current branch
         run: |
           echo "Branch: ${{ github.ref }}"
-          git log -1 --oneline
+
+      - name: List environment files
+        run: ls -la src/environments
+
+      - name: Copy environment file
+        run: cp src/environments/environment.example.ts src/environments/environment.ts
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -31,13 +36,7 @@ jobs:
           node-version: '22.14.0'
 
       - name: Install dependencies
-        run: npm install
-
-      - name: List environment files
-        run: ls -la RoutingApp.UI/src/environments
-
-      - name: Copy environment template
-        run: cp RoutingApp.UI/src/environments/environment.example.ts RoutingApp.UI/src/environments/environment.ts
+        run: npm ci
 
       - name: Build the Angular app
         run: npm run build
@@ -48,4 +47,4 @@ jobs:
           app-name: 'routing-app-ui'
           slot-name: 'development'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: RoutingApp.UI/dist/RoutingApp.UI
+          package: dist/RoutingApp.UI
