@@ -27,6 +27,13 @@ jobs:
       - name: Copy environment file
         run: cp src/environments/environment.example.ts src/environments/environment.ts
 
+      - name: Update environment.ts with secrets
+        run: |
+          sed -i "s|domain: ''|domain: '${{ secrets.AUTH0_DOMAIN }}'|g" src/environments/environment.ts
+          sed -i "s|clientId: ''|clientId: '${{ secrets.AUTH0_CLIENT_ID }}'|g" src/environments/environment.ts
+          sed -i "s|audience: 'api link'|audience: '${{ secrets.AUTH0_AUDIENCE }}'|g" src/environments/environment.ts
+          sed -i "s|redirectUri: ''|redirectUri: '${{ secrets.AUTH0_REDIRECT_URI }}'|g" src/environments/environment.ts
+    
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
