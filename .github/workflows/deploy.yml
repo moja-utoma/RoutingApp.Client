@@ -17,6 +17,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+         ref: ${{ github.ref }}
+
+      - name: Show Git info
+        run: |
+          echo "Branch: ${{ github.ref }}"
+          git log -1 --oneline
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
