@@ -11,9 +11,9 @@ import {
   ViewChild,
 } from '@angular/core';
 import * as L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+//import 'leaflet/dist/leaflet.css';
 import { firstValueFrom, Observable } from 'rxjs';
-import { environment } from '../../../../environments/environment';
+import { envAuth0, environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { RoutesService } from '../../../features/routes/routes-service';
 
@@ -239,7 +239,7 @@ export class MapView implements OnChanges, AfterViewInit {
       radiuses: coords.map(() => 1000),
     };
 
-    this.http.post('https://localhost:7136/api/Ors/route', body).subscribe({
+    this.http.post(envAuth0.audience + 'api/Ors/route', body).subscribe({
       next: (geojson: any) => {
         L.geoJSON(geojson, {
           style: {

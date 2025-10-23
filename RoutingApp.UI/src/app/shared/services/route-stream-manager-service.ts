@@ -64,9 +64,9 @@ export class RouteStreamManagerService {
     const stream = this.streams[routeId];
     if (!stream) return;
 
-    stream.controller?.abort();
-    stream.sub?.unsubscribe();
-    delete this.streams[routeId];
+    //stream.controller?.abort();
+    //stream.sub?.unsubscribe();
+    //delete this.streams[routeId];
   }
 
   resumeStream(routeId: number): void {
@@ -100,10 +100,15 @@ export class RouteStreamManagerService {
     const raw = localStorage.getItem('activeRoutes');
     if (!raw) return;
 
+    const stream = this.streams[routeId];
+    if (!stream) return;
+
+    stream.controller?.abort();
+    stream.sub?.unsubscribe();
+    delete this.streams[routeId];
+
     const routes = JSON.parse(raw);
     delete routes[routeId];
     localStorage.setItem('activeRoutes', JSON.stringify(routes));
   }
-
-
 }

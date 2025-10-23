@@ -56,7 +56,7 @@ export interface CreateRoute {
 })
 export class RoutesService {
   private http = inject(HttpClient);
-  private apiUrl = 'https://localhost:7136/api/Routes';
+  private apiUrl = envAuth0.audience + 'api/Routes';
 
   constructor(private auth: AuthService) {}
 
@@ -67,7 +67,7 @@ export class RoutesService {
       radiuses: number[];
     }
   ): Observable<{ lat: number; lng: number }> {
-    const baseUrl = `https://localhost:7136/api/Ors/stream/${routeId}`;
+    const baseUrl = envAuth0.audience + `api/Ors/stream/${routeId}`;
     const lastTimestamp = localStorage.getItem(`sse-${routeId}-lastTimestamp`);
     const url = lastTimestamp ? `${baseUrl}?since=${encodeURIComponent(lastTimestamp)}` : baseUrl;
 

@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Vehicle } from '../vehicles/vehicles-service';
 import { PaginatedResponse, QueryParamsModel } from '../../shared/models/request-respone-models';
+import { envAuth0 } from '../../../environments/environment';
 
 export interface Warehouse {
   id: number;
@@ -36,7 +37,7 @@ export interface CreateWarehouse {
 })
 export class WarehousesService {
   private http = inject(HttpClient);
-  private apiUrl = 'https://localhost:7136/api/Warehouses';
+  private apiUrl = envAuth0.audience + 'api/Warehouses';
 
   getAll(params?: QueryParamsModel): Observable<PaginatedResponse<Warehouse>> {
     let parsed = new HttpParams();

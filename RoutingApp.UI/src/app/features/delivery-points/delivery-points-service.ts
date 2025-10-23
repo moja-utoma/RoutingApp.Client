@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { from, map, Observable, switchMap, tap } from 'rxjs';
 import { PaginatedResponse, QueryParamsModel } from '../../shared/models/request-respone-models';
-import { environment } from '../../../environments/environment';
+import { envAuth0, environment } from '../../../environments/environment';
 import { MsalService } from '@azure/msal-angular';
 import { AuthService } from '@auth0/auth0-angular';
 
@@ -38,7 +38,7 @@ export interface DeliveryPointDetails {
 })
 export class DeliveryPointsService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.api.baseUrl}/api/DeliveryPoints`;
+  private apiUrl = `${envAuth0.audience}api/DeliveryPoints`;
 
   constructor(private auth: AuthService) {}
 

@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Warehouse } from '../warehouses/warehouses-service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { envAuth0 } from '../../../environments/environment';
 
 export interface CreateVehicle {
   id: number;
@@ -31,7 +32,7 @@ export interface VehicleDetails {
 })
 export class VehiclesService {
   private http = inject(HttpClient);
-  private apiUrl = 'https://localhost:7136/api/Vehicles';
+  private apiUrl = envAuth0.audience + 'api/Vehicles';
 
   getAll(): Observable<Vehicle[]> {
     return this.http.get<Vehicle[]>(this.apiUrl);

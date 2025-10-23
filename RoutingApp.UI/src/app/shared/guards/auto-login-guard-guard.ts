@@ -14,11 +14,6 @@ export const AutoLoginGuard: CanActivateFn = () => {
         auth.loginWithRedirect();
       }
     }),
-    // Prevent navigation until login completes
-    // Returning false avoids route activation
-    // Returning true allows navigation (if already authenticated)
-    // Returning of(false) avoids redirect loop
-    // You can fine-tune this based on your UX
     tap(() => {})
   );
 };
