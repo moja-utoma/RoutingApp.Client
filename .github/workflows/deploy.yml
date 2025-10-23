@@ -48,9 +48,14 @@ jobs:
       - name: Confirm build contents
         run: ls -la dist/RoutingApp.UI/browser
 
+      - name: Zip build output
+        run: |
+          cd dist/RoutingApp.UI/browser
+          zip -r ../../../build.zip .
+
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: "routing-app-ui"
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: RoutingApp.UI/dist/RoutingApp.UI/browser
+          package: build.zip #RoutingApp.UI/dist/RoutingApp.UI/browser
