@@ -31,30 +31,30 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([authHttpInterceptorFn])),
     //provideHttpClient(withInterceptorsFromDi()),
 
-    provideAuth0({
-      domain: envAuth0.domain,
-      clientId: envAuth0.clientId,
+    // provideAuth0({
+    //   domain: envAuth0.domain,
+    //   clientId: envAuth0.clientId,
 
-      authorizationParams: {
-        redirect_uri: envAuth0.redirectUri,
-        audience: envAuth0.audience,
-        scope: 'openid profile email read:current_user',
-      },
+    //   authorizationParams: {
+    //     redirect_uri: envAuth0.redirectUri,
+    //     audience: envAuth0.audience,
+    //     scope: 'openid profile email read:current_user',
+    //   },
 
-      httpInterceptor: {
-        allowedList: [
-          {
-            uri: envAuth0.audience+'*',
-            tokenOptions: {
-              authorizationParams: {
-                audience: envAuth0.audience,
-                scope: 'read:current_user',
-              },
-            },
-          },
-        ],
-      },
-    }),
+    //   httpInterceptor: {
+    //     allowedList: [
+    //       {
+    //         uri: envAuth0.audience+'*',
+    //         tokenOptions: {
+    //           authorizationParams: {
+    //             audience: envAuth0.audience,
+    //             scope: 'read:current_user',
+    //           },
+    //         },
+    //       },
+    //     ],
+    //   },
+    // }),
 
     // importProvidersFrom(
     //   MsalModule.forRoot(
