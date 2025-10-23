@@ -27,7 +27,7 @@ jobs:
         run: npm install
 
       - name: Copy environment template
-        run: cp src/environments/environment.template.ts src/environments/environment.ts
+        run: cp RoutingApp.UI/src/environments/environment.template.ts RoutingApp.UI/src/environments/environment.ts
 
       - name: Build the Angular app
         run: npm run build
