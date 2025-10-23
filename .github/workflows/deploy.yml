@@ -41,6 +41,9 @@ jobs:
       - name: Build the Angular app
         run: npm run build
 
+      - name: Check dist output
+        run: ls -la dist
+
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
