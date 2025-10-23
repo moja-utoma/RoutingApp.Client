@@ -26,6 +26,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: List environment files
+        run: ls -la RoutingApp.UI/src/environments
+
       - name: Copy environment template
         run: cp RoutingApp.UI/src/environments/environment.example.ts RoutingApp.UI/src/environments/environment.ts
 
