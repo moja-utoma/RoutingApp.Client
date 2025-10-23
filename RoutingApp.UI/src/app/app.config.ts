@@ -14,9 +14,9 @@ import {
   withInterceptors,
   withInterceptorsFromDi,
 } from '@angular/common/http';
-import { MsalModule, MsalInterceptor, MsalGuard } from '@azure/msal-angular';
-import { InteractionType } from '@azure/msal-browser';
-import { MSALInstanceFactory } from '../main';
+// import { MsalModule, MsalInterceptor, MsalGuard } from '@azure/msal-angular';
+// import { InteractionType } from '@azure/msal-browser';
+// import { MSALInstanceFactory } from '../main';
 
 import { authHttpInterceptorFn, provideAuth0 } from '@auth0/auth0-angular';
 
