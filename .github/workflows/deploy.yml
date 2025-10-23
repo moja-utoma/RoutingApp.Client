@@ -48,11 +48,6 @@ jobs:
       - name: Confirm build contents
         run: ls -la dist/RoutingApp.UI/browser
 
-      # - name: Zip build output
-      #   run: |
-      #     cd dist/RoutingApp.UI/browser
-      #     zip -r ../../../build.zip .
-
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
