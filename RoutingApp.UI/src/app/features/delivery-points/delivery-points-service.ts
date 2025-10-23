@@ -2,8 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { from, map, Observable, switchMap, tap } from 'rxjs';
 import { PaginatedResponse, QueryParamsModel } from '../../shared/models/request-respone-models';
-import { envAuth0, environment } from '../../../environments/environment';
-import { MsalService } from '@azure/msal-angular';
+import { envAuth0 } from '../../../environments/environment';
+//import { MsalService } from '@azure/msal-angular';
 import { AuthService } from '@auth0/auth0-angular';
 
 export interface CreateDeliveryPoint {
@@ -38,7 +38,7 @@ export interface DeliveryPointDetails {
 })
 export class DeliveryPointsService {
   private http = inject(HttpClient);
-  private apiUrl = `${envAuth0.audience}api/DeliveryPoints`;
+  private apiUrl = `${envAuth0.audience}/api/DeliveryPoints`;
 
   constructor(private auth: AuthService) {}
 
@@ -132,7 +132,7 @@ export class DeliveryPointsService {
     query: string
   ): Observable<{ lat: number; lng: number; address: string; fullAddress: string }> {
     const encoded = encodeURIComponent(query);
-    const url = `${environment.api.baseUrl}/api/Ors/search?text=${encoded}`;
+    const url = `${envAuth0.audience}/api/Ors/search?text=${encoded}`;
     return this.http.get<any>(url).pipe(
       map((res) => ({
         lat: res.latitude,

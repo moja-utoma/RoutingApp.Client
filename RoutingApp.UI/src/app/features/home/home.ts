@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { MsalService } from '@azure/msal-angular';
-import { AccountInfo } from '@azure/msal-browser';
+//import { MsalService } from '@azure/msal-angular';
+//import { AccountInfo } from '@azure/msal-browser';
 import { concatMap, map, tap } from 'rxjs';
 import { AuthService } from '@auth0/auth0-angular';
 

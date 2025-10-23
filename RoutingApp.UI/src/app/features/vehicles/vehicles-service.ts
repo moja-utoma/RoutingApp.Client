@@ -32,7 +32,7 @@ export interface VehicleDetails {
 })
 export class VehiclesService {
   private http = inject(HttpClient);
-  private apiUrl = envAuth0.audience + 'api/Vehicles';
+  private apiUrl = envAuth0.audience + '/api/Vehicles';
 
   getAll(): Observable<Vehicle[]> {
     return this.http.get<Vehicle[]>(this.apiUrl);

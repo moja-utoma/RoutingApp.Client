@@ -3,7 +3,7 @@ import { Warehouse } from '../warehouses/warehouses-service';
 import { DeliveryPoint } from '../delivery-points/delivery-points-service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { envAuth0, environment } from '../../../environments/environment';
+import { envAuth0 } from '../../../environments/environment';
 import { AuthService } from '@auth0/auth0-angular';
 
 export interface Route {
@@ -56,7 +56,7 @@ export interface CreateRoute {
 })
 export class RoutesService {
   private http = inject(HttpClient);
-  private apiUrl = envAuth0.audience + 'api/Routes';
+  private apiUrl = envAuth0.audience + '/api/Routes';
 
   constructor(private auth: AuthService) {}
 
@@ -67,7 +67,7 @@ export class RoutesService {
       radiuses: number[];
     }
   ): Observable<{ lat: number; lng: number }> {
-    const baseUrl = envAuth0.audience + `api/Ors/stream/${routeId}`;
+    const baseUrl = envAuth0.audience + `/api/Ors/stream/${routeId}`;
     const lastTimestamp = localStorage.getItem(`sse-${routeId}-lastTimestamp`);
     const url = lastTimestamp ? `${baseUrl}?since=${encodeURIComponent(lastTimestamp)}` : baseUrl;
 

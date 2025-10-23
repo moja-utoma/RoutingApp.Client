@@ -13,7 +13,7 @@ import {
 import * as L from 'leaflet';
 //import 'leaflet/dist/leaflet.css';
 import { firstValueFrom, Observable } from 'rxjs';
-import { envAuth0, environment } from '../../../../environments/environment';
+import { envAuth0 } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { RoutesService } from '../../../features/routes/routes-service';
 
@@ -175,7 +175,7 @@ export class MapView implements OnChanges, AfterViewInit {
     latitude: number;
     longitude: number;
   }> {
-    const url = `${environment.api.baseUrl}/api/Ors/reverse?lat=${lat}&lng=${lng}`;
+    const url = `${envAuth0.audience}/api/Ors/reverse?lat=${lat}&lng=${lng}`;
     return firstValueFrom(
       this.http.get<{
         fullAddress: string;
@@ -239,7 +239,7 @@ export class MapView implements OnChanges, AfterViewInit {
       radiuses: coords.map(() => 1000),
     };
 
-    this.http.post(envAuth0.audience + 'api/Ors/route', body).subscribe({
+    this.http.post(envAuth0.audience + '/api/Ors/route', body).subscribe({
       next: (geojson: any) => {
         L.geoJSON(geojson, {
           style: {

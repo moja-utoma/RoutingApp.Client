@@ -37,7 +37,7 @@ export interface CreateWarehouse {
 })
 export class WarehousesService {
   private http = inject(HttpClient);
-  private apiUrl = envAuth0.audience + 'api/Warehouses';
+  private apiUrl = envAuth0.audience + '/api/Warehouses';
 
   getAll(params?: QueryParamsModel): Observable<PaginatedResponse<Warehouse>> {
     let parsed = new HttpParams();
