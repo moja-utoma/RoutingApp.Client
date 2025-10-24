@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '@auth0/auth0-angular';
+//import { AuthService } from '@auth0/auth0-angular';
 //import { MsalService } from '@azure/msal-angular';
 
 @Component({
@@ -14,10 +14,10 @@ import { AuthService } from '@auth0/auth0-angular';
 })
 export class Menu {
   //constructor(private msalService: MsalService) {}
-  constructor(public auth: AuthService) {}
+  //constructor(public auth: AuthService) {}
 
   logoutLocal() {
-    this.auth.logout({ logoutParams: { returnTo: document.location.origin } });
+    // this.auth.logout({ logoutParams: { returnTo: document.location.origin } });
 
     //this.msalService.logoutRedirect();
     // this.msalService.instance.setActiveAccount(null);
