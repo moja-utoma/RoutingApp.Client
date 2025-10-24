@@ -18,6 +18,7 @@ steps:
 
 - script: |
     npm install -g @angular/cli
+    cd RoutingApp.UI
     npm install
     ng build
   displayName: 'npm install and build'
