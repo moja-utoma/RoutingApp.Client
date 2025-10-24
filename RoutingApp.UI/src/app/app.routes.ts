@@ -15,7 +15,7 @@ import { VehiclesCreate } from './features/vehicles/vehicles-create/vehicles-cre
 import { WarehousesCreate } from './features/warehouses/warehouses-create/warehouses-create';
 //import { MsalGuard } from '@azure/msal-angular';
 
-import { AuthGuard } from '@auth0/auth0-angular';
+//import { AuthGuard } from '@auth0/auth0-angular';
 
 export const routes: Routes = [
   {

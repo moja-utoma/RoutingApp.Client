@@ -18,9 +18,9 @@ import {
 // import { InteractionType } from '@azure/msal-browser';
 // import { MSALInstanceFactory } from '../main';
 
-import { authHttpInterceptorFn, provideAuth0 } from '@auth0/auth0-angular';
+//import { authHttpInterceptorFn, provideAuth0 } from '@auth0/auth0-angular';
 
-import { envAuth0, environment } from '../environments/environment';
+//import { envAuth0, environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -28,7 +28,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withEnabledBlockingInitialNavigation()),
     provideHttpClient(withFetch()),
-    provideHttpClient(withInterceptors([authHttpInterceptorFn])),
+    //provideHttpClient(withInterceptors([authHttpInterceptorFn])),
     //provideHttpClient(withInterceptorsFromDi()),
 
     // provideAuth0({

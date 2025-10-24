@@ -12,20 +12,20 @@ import { AuthService } from '@auth0/auth0-angular';
 export class App implements OnInit {
   protected readonly title = signal('RoutingApp.UI');
 
-  private auth = inject(AuthService);
-  private appRef = inject(ApplicationRef);
+  //private auth = inject(AuthService);
+  //private appRef = inject(ApplicationRef);
 
   ngOnInit(): void {
     // Wait until Angular is stable before triggering login
-    this.appRef.isStable.subscribe((stable) => {
-      if (stable) {
-        this.auth.isAuthenticated$.subscribe((isAuth) => {
-          if (!isAuth) {
-            this.auth.loginWithRedirect();
-          }
-        });
-      }
-    });
+    // this.appRef.isStable.subscribe((stable) => {
+    //   if (stable) {
+    //     this.auth.isAuthenticated$.subscribe((isAuth) => {
+    //       if (!isAuth) {
+    //         this.auth.loginWithRedirect();
+    //       }
+    //     });
+    //   }
+    // });
   }
 
   // constructor(private msalService: MsalService) {}
