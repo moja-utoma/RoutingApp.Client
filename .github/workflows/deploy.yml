@@ -36,9 +36,9 @@ jobs:
           sed -i "s|__AUTH0_CLIENT_ID__|${{ secrets.AUTH0_CLIENT_ID }}|g" environment.ts
           sed -i "s|__AUTH0_AUDIENCE__|${{ secrets.AUTH0_AUDIENCE }}|g" environment.ts
           sed -i "s|__AUTH0_REDIRECT_URI__|${{ secrets.AUTH0_REDIRECT_URI }}|g" environment.ts
-    
+
       - name: Build the Angular app
-        run: npm run build
+        run: npm run build -- --configuration production
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
