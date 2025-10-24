@@ -40,29 +40,40 @@ export class DeliveryPointsService {
   private http = inject(HttpClient);
   private apiUrl = `${envAuth0.audience}/api/DeliveryPoints`;
 
-  constructor(private auth: AuthService) {}
+  //constructor(private auth: AuthService) {}
 
   getAll(params?: QueryParamsModel): Observable<PaginatedResponse<DeliveryPoint>> {
-    return this.auth.getAccessTokenSilently().pipe(
-      switchMap((accessToken) => {
-        // Step 1: Build query params
-        let parsed = new HttpParams();
-        if (params) {
-          Object.entries(params).forEach(([key, value]) => {
-            if (value !== undefined && value !== null) {
-              parsed = parsed.set(key, value.toString());
-            }
-          });
+    let parsed = new HttpParams();
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          parsed = parsed.set(key, value.toString());
         }
+      });
+    }
 
-        // Step 2: Make the actual HTTP request with Authorization header
-        return this.http.get<PaginatedResponse<DeliveryPoint>>(this.apiUrl, {
-          params: parsed,
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-      })
-    );
+    return this.http.get<PaginatedResponse<DeliveryPoint>>(this.apiUrl, { params: parsed });
   }
+    //   return this.auth.getAccessTokenSilently().pipe(
+  //     switchMap((accessToken) => {
+  //       // Step 1: Build query params
+  //       let parsed = new HttpParams();
+  //       if (params) {
+  //         Object.entries(params).forEach(([key, value]) => {
+  //           if (value !== undefined && value !== null) {
+  //             parsed = parsed.set(key, value.toString());
+  //           }
+  //         });
+  //       }
+
+  //       // Step 2: Make the actual HTTP request with Authorization header
+  //       return this.http.get<PaginatedResponse<DeliveryPoint>>(this.apiUrl, {
+  //         params: parsed,
+  //         headers: { Authorization: `Bearer ${accessToken}` },
+  //       });
+  //     })
+  //   );
+  // }
 
   // constructor(private msalService: MsalService) {}
 

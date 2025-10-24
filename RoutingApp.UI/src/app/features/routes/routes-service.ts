@@ -58,7 +58,7 @@ export class RoutesService {
   private http = inject(HttpClient);
   private apiUrl = envAuth0.audience + '/api/Routes';
 
-  constructor(private auth: AuthService) {}
+  //constructor(private auth: AuthService) {}
 
   streamRoute(
     routeId: number,
@@ -74,20 +74,20 @@ export class RoutesService {
     return new Observable((observer) => {
       const controller = new AbortController();
 
-      this.auth
-        .getAccessTokenSilently({
-          authorizationParams: {
-            audience: envAuth0.audience,
-            scope: 'read:current_user',
-          },
-        })
-        .subscribe({
-          next: (token) => {
+      // this.auth
+      //   .getAccessTokenSilently({
+      //     authorizationParams: {
+      //       audience: envAuth0.audience,
+      //       scope: 'read:current_user',
+      //     },
+      //   })
+      //   .subscribe({
+      //     next: (token) => {
             fetch(url, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                //Authorization: `Bearer ${token}`,
               },
               body: JSON.stringify(body),
               signal: controller.signal,
@@ -135,9 +135,9 @@ export class RoutesService {
                 read();
               })
               .catch((err) => observer.error(err));
-          },
-          error: (err) => observer.error(err),
-        });
+          //},
+        //   error: (err) => observer.error(err),
+        // });
 
       // Optional: cleanup on unsubscribe
       return () => controller.abort();
