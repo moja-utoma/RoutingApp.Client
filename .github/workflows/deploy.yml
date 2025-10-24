@@ -47,4 +47,4 @@ jobs:
         with:
           app-name: "routing-app-ui"
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: RoutingApp.UI/dist/RoutingApp.UI/browser
+          package: ${{ github.workspace }}/RoutingApp.UI/dist/RoutingApp.UI/browser
