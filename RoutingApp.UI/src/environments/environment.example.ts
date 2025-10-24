@@ -18,8 +18,8 @@ export const environment = {
 };
 
 export const envAuth0 = {
-  domain: '',
-  clientId: '',
-  audience: 'api link',
-  redirectUri: '',
+  domain: '__AUTH0_DOMAIN__',
+  clientId: '__AUTH0_CLIENT_ID__',
+  audience: '__AUTH0_AUDIENCE__',
+  redirectUri: '__AUTH0_REDIRECT_URI__',
 };
