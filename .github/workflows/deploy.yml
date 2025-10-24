@@ -35,7 +35,7 @@ jobs:
       
       - name: Build the Angular app
         working-directory: RoutingApp.UI
-        run: npm run build -- --configuration production
+        run: npm run build
       
       - name: Verify build output
         working-directory: RoutingApp.UI
@@ -53,7 +53,7 @@ jobs:
           fi
       
       - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v3
         with:
           app-name: "routing-app-ui"
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
