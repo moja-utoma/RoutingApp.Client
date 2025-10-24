@@ -29,13 +29,12 @@ jobs:
         run: npm ci
 
       - name: Create environment.ts from template
-        working-directory: src/environments
         run: |
-          cp environment.example.ts environment.ts
-          sed -i "s|__AUTH0_DOMAIN__|${{ secrets.AUTH0_DOMAIN }}|g" environment.ts
-          sed -i "s|__AUTH0_CLIENT_ID__|${{ secrets.AUTH0_CLIENT_ID }}|g" environment.ts
-          sed -i "s|__AUTH0_AUDIENCE__|${{ secrets.AUTH0_AUDIENCE }}|g" environment.ts
-          sed -i "s|__AUTH0_REDIRECT_URI__|${{ secrets.AUTH0_REDIRECT_URI }}|g" environment.ts
+          cp src/environments/environment.example.ts src/environments/environment.ts
+          sed -i "s|__AUTH0_DOMAIN__|${{ secrets.AUTH0_DOMAIN }}|g" src/environments/environment.ts
+          sed -i "s|__AUTH0_CLIENT_ID__|${{ secrets.AUTH0_CLIENT_ID }}|g" src/environments/environment.ts
+          sed -i "s|__AUTH0_AUDIENCE__|${{ secrets.AUTH0_AUDIENCE }}|g" src/environments/environment.ts
+          sed -i "s|__AUTH0_REDIRECT_URI__|${{ secrets.AUTH0_REDIRECT_URI }}|g" src/environments/environment.ts
 
       - name: Build the Angular app
         run: npm run build -- --configuration production
