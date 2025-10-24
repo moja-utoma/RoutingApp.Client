@@ -1,5 +1,19 @@
 <app-table
-      title="Delivery Points"
-      [items]="deliveryPoints"
-      [columns]="columns">
-    </app-table>
+  title="Delivery Points"
+  [items]="deliveryPoints"
+  [columns]="columns"
+  [showActions]="true"
+  [showSort]="true"
+  [onEdit]="onEdit"
+  [onDelete]="onDelete"
+  [showPagination]="true"
+  [pageIndex]="queryParams.page - 1"
+  [pageSize]="queryParams.pageSize"
+  [totalItems]="totalCount"
+  (pageChange)="onPageChange($event)"
+  (sortChange)="onSortChange($event)"
+  [showSearch]="true"
+  (searchChange)="onSearch($event)"
+>
+  <div><a routerLink="/delivery-points/create">Create new delivery point</a></div>
+</app-table>

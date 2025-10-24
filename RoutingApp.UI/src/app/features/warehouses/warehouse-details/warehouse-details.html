@@ -3,6 +3,8 @@
   <p><strong>Address:</strong> {{warehouse.address}}</p>
   <p><strong>Coordinates:</strong> {{warehouse.latitude}}, {{warehouse.longitude}}</p>
 
+  <app-map [points]="[pointMarker!]"></app-map>
+
   <app-table
     [title]="'Vehicles'"
     [items]="warehouse.vehicles"

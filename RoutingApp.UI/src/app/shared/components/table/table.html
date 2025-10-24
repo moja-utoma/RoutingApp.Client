@@ -1,34 +1,58 @@
 <h2>{{ title }}</h2>
 
-@if (!items || items.length === 0) {
-<div class="spinner-container">
+<ng-content></ng-content>
+
+@if (showSearch) {
+<mat-form-field appearance="fill" class="search-field">
+  <mat-label>Search</mat-label>
+  <input matInput [formControl]="searchControl" placeholder="Search..." />
+</mat-form-field>
+} @if (!items || items.length === 0) {
+<p>No items are found</p>
+<!-- <div class="spinner-container">
   <mat-spinner [diameter]="50"></mat-spinner>
-</div>
+</div> -->
 } @else {
-<table mat-table [dataSource]="items" class="mat-elevation-z2">
+<table
+  mat-table
+  [dataSource]="items"
+  class="mat-elevation-z2"
+  [matSortDisabled]="!showSort"
+  matSort
+  (matSortChange)="showSort && sortChange.emit($event)"
+>
   @for (col of columns; track col.key) {
   <ng-container [matColumnDef]="col.key">
-    <th mat-header-cell *matHeaderCellDef>{{ col.label }}</th>
+    <th mat-header-cell *matHeaderCellDef [mat-sort-header]="showSort ? col.key : ''">
+      {{ col.label }}
+    </th>
     <td mat-cell *matCellDef="let element">
       @if (col.link) {
       <a [routerLink]="col.link(element)" class="table-link">
         {{ col.get ? col.get(element) : element[col.key] }}
       </a>
-      } @else if (col.actions) {
-      <div class="action-buttons">
-        @for (action of col.actions;track action.icon) {
-        <button
-          mat-icon-button
-          [matTooltip]="action.tooltip"
-          (click)="handleAction(element, action)"
-        >
-          <mat-icon>{{ action.icon }}</mat-icon>
-        </button>
-        }
-      </div>
       } @else {
       {{ col.get ? col.get(element) : element[col.key] }}
       }
+    </td>
+  </ng-container>
+  } @if (showActions) {
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef>Actions</th>
+    <td mat-cell *matCellDef="let element">
+      <div class="actions">
+        <button mat-icon-button color="primary" [disabled]="!onEdit" (click)="onEdit?.(element)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          color="warn"
+          [disabled]="!onDelete"
+          (click)="onDelete?.(element.id)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
     </td>
   </ng-container>
   }
@@ -36,4 +60,13 @@
   <tr mat-header-row *matHeaderRowDef="columnKeys"></tr>
   <tr mat-row *matRowDef="let row; columns: columnKeys"></tr>
 </table>
-}
+@if (showPagination) {
+<mat-paginator
+  [length]="totalItems"
+  [pageSize]="pageSize"
+  [pageIndex]="pageIndex"
+  [pageSizeOptions]="[10, 25, 50]"
+  (page)="pageChange.emit($event)"
+>
+</mat-paginator>
+} }

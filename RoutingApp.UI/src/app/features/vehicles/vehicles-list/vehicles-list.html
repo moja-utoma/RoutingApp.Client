@@ -1,5 +1,9 @@
 <app-table
   title="Vehicles"
   [items]="vehicles"
-  [columns]="columns">
+  [columns]="columns"
+  [showActions]="true"
+  [onEdit]="onEdit"
+  [onDelete]="onDelete">
+  <div><a routerLink="/vehicles/create">Create new vehicle</a></div>
 </app-table>

@@ -1,0 +1,75 @@
+@if (loading) {
+<div class="loading-container">
+  <mat-spinner></mat-spinner>
+  <p>Loading route details...</p>
+</div>
+} @else if (error) {
+<mat-card class="error-card">
+  <mat-card-content>
+    <p class="error-message">{{ error }}</p>
+  </mat-card-content>
+</mat-card>
+} @else if (routeDetails) {
+<div class="route-details-container">
+  <h2>{{ routeDetails.name }}</h2>
+  <p><strong>Warehouses:</strong> {{ routeDetails.warehouses.length }}</p>
+  <p><strong>Delivery Points:</strong> {{ routeDetails.deliveryPoints.length }}</p>
+  <p><strong>Total Weight:</strong> {{ getTotalWeight() }} kg</p>
+
+  <button mat-raised-button color="primary" (click)="calculateRoute()" [disabled]="calculating">
+    {{ calculating ? 'Calculating...' : 'Calculate Route' }}
+  </button>
+
+  <button mat-raised-button color="primary" (click)="startStreamingMovement()">
+  Simulate Vehicle Movement
+</button>
+
+
+  @if (mapPoints.length > 0) {
+  <div class="map-section">
+    <app-map #mapView [points]="mapPoints"></app-map>
+  </div>
+  }
+
+  <mat-tab-group class="route-tabs">
+    <mat-tab label="Warehouses ({{ routeDetails.warehouses.length }})">
+      <div class="tab-content">
+        @if (routeDetails.warehouses.length > 0) {
+        <app-table
+          [title]="'Route Warehouses'"
+          [items]="warehousesForTable"
+          [columns]="warehouseColumns"
+        >
+        </app-table>
+        } @else {
+        <mat-card class="empty-state">
+          <mat-card-content>
+            <p>No warehouses assigned to this route.</p>
+          </mat-card-content>
+        </mat-card>
+        }
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Delivery Points ({{ routeDetails.deliveryPoints.length }})">
+      <div class="tab-content">
+        @if (routeDetails.deliveryPoints.length > 0) {
+        <app-table
+          [title]="'Route Delivery Points'"
+          [items]="deliveryPointsForTable"
+          [columns]="deliveryPointColumns"
+        >
+        </app-table>
+        } @else {
+        <mat-card class="empty-state">
+          <mat-card-content>
+            <p>No delivery points assigned to this route.</p>
+          </mat-card-content>
+        </mat-card>
+        }
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+
+}
