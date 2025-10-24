@@ -1,5 +1,4 @@
 name: Angular App to Azure
-
 on:
   push:
     branches:
@@ -9,42 +8,53 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: RoutingApp.UI
-
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
-
+      
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "22.14.0"
-
+      
       - name: Install dependencies
+        working-directory: RoutingApp.UI
         run: npm ci
-
+      
       - name: Create environment.ts from template
+        working-directory: RoutingApp.UI
         run: |
           cp src/environments/environment.example.ts src/environments/environment.ts
           sed -i "s|__AUTH0_DOMAIN__|${{ secrets.AUTH0_DOMAIN }}|g" src/environments/environment.ts
           sed -i "s|__AUTH0_CLIENT_ID__|${{ secrets.AUTH0_CLIENT_ID }}|g" src/environments/environment.ts
           sed -i "s|__AUTH0_AUDIENCE__|${{ secrets.AUTH0_AUDIENCE }}|g" src/environments/environment.ts
           sed -i "s|__AUTH0_REDIRECT_URI__|${{ secrets.AUTH0_REDIRECT_URI }}|g" src/environments/environment.ts
-
+      
       - name: Build the Angular app
+        working-directory: RoutingApp.UI
         run: npm run build -- --configuration production
-
-      - name: List build output  # Add this to debug
-        run: ls -la dist/RoutingApp.UI/browser
-
+      
+      - name: Verify build output
+        working-directory: RoutingApp.UI
+        run: |
+          echo "=== Build output verification ==="
+          if [ -d "dist/RoutingApp.UI/browser" ]; then
+            echo "✓ Build directory exists"
+            echo "Files in build:"
+            ls -lah dist/RoutingApp.UI/browser/
+          else
+            echo "✗ Build directory NOT found!"
+            echo "Contents of dist/:"
+            ls -lah dist/ || echo "dist/ doesn't exist"
+            exit 1
+          fi
+      
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: "routing-app-ui"
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ${{ github.workspace }}/RoutingApp.UI/dist/RoutingApp.UI/browser
+          package: RoutingApp.UI/dist/RoutingApp.UI/browser
