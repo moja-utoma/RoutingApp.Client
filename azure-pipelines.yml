@@ -10,21 +10,48 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+  - group: AngularSecrets
+
 steps:
 - task: NodeTool@0
   inputs:
-    versionSpec: '20.x'
+    versionSpec: '22.x'
   displayName: 'Install Node.js'
 
+- script: npm install
+  workingDirectory: RoutingApp.UI
+  displayName: 'Install dependencies'
+
 - script: |
-    npm install -g @angular/cli
-    npm install
-    ng build
-  displayName: 'npm install and build'
+    cp src/environments/environment.example.ts src/environments/environment.ts
+    sed -i "s|__AUTH0_DOMAIN__|${AUTH0_DOMAIN}|g" src/environments/environment.ts
+    sed -i "s|__AUTH0_CLIENT_ID__|${AUTH0_CLIENT_ID}|g" src/environments/environment.ts
+    sed -i "s|__AUTH0_AUDIENCE__|${AUTH0_AUDIENCE}|g" src/environments/environment.ts
+    sed -i "s|__AUTH0_REDIRECT_URI__|${AUTH0_REDIRECT_URI}|g" src/environments/environment.ts
+  workingDirectory: RoutingApp.UI
+  displayName: 'Inject secrets into environment.ts'
+
+- script: npm run build
+  workingDirectory: RoutingApp.UI
+  displayName: 'Build Angular app'
+
+- script: |
+    echo "=== Build output verification ==="
+    if [ -d "dist/RoutingApp.UI/browser" ]; then
+      echo "✓ Build directory exists"
+      ls -lah dist/RoutingApp.UI/browser/
+    else
+      echo "✗ Build directory NOT found!"
+      ls -lah dist/ || echo "dist/ doesn't exist"
+      exit 1
+    fi
+  workingDirectory: RoutingApp.UI
+  displayName: 'Verify build output'
 
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: 'dist/RoutingApp.UI/browser'
-    artifactName: 'drop'
+    PathtoPublish: 'RoutingApp.UI/dist/RoutingApp.UI/browser'
+    artifactName: 'angular-ui'
     publishLocation: Container
   displayName: 'publish'
