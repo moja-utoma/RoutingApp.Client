@@ -2,18 +2,18 @@ export const environment = {
   production: false,
   msal: {
     auth: {
-      clientId: '',
-      authority: 'https://login.microsoftonline.com/ ',
-      redirectUri: 'h',
+      clientId: '__CLIENT_ID__',
+      authority: '__AUTHORITY__',
+      redirectUri: '__REDIRECT_URI__',
     },
     cache: {
-      cacheLocation: '',
+      cacheLocation: '__CACHE_LOCATION__',
       storeAuthStateInCookie: false,
     },
   },
   api: {
-    baseUrl: '',
-    scope: '',
+    baseUrl: '__API_BASE_URL__',
+    scope: '__API_SCOPE__',
   },
 };
 

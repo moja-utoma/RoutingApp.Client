@@ -2,9 +2,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { from, map, Observable, switchMap, tap } from 'rxjs';
 import { PaginatedResponse, QueryParamsModel } from '../../shared/models/request-respone-models';
-import { envAuth0 } from '../../../environments/environment';
-//import { MsalService } from '@azure/msal-angular';
-import { AuthService } from '@auth0/auth0-angular';
+import { envAuth0, environment } from '../../../environments/environment';
+import { MsalService } from '@azure/msal-angular';
+//import { AuthService } from '@auth0/auth0-angular';
 
 export interface CreateDeliveryPoint {
   id: number;
@@ -38,22 +38,24 @@ export interface DeliveryPointDetails {
 })
 export class DeliveryPointsService {
   private http = inject(HttpClient);
-  private apiUrl = `${envAuth0.audience}/api/DeliveryPoints`;
+  //private apiUrl = `${envAuth0.audience}/api/DeliveryPoints`;
+  private apiUrl = `${environment.api.baseUrl}/api/DeliveryPoints`;
 
+  constructor(private msalService: MsalService) {}
   //constructor(private auth: AuthService) {}
 
-  getAll(params?: QueryParamsModel): Observable<PaginatedResponse<DeliveryPoint>> {
-    let parsed = new HttpParams();
-    if (params) {
-      Object.entries(params).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          parsed = parsed.set(key, value.toString());
-        }
-      });
-    }
+  // getAll(params?: QueryParamsModel): Observable<PaginatedResponse<DeliveryPoint>> {
+  //   let parsed = new HttpParams();
+  //   if (params) {
+  //     Object.entries(params).forEach(([key, value]) => {
+  //       if (value !== undefined && value !== null) {
+  //         parsed = parsed.set(key, value.toString());
+  //       }
+  //     });
+  //   }
 
-    return this.http.get<PaginatedResponse<DeliveryPoint>>(this.apiUrl, { params: parsed });
-  }
+  //   return this.http.get<PaginatedResponse<DeliveryPoint>>(this.apiUrl, { params: parsed });
+  // }
     //   return this.auth.getAccessTokenSilently().pipe(
   //     switchMap((accessToken) => {
   //       // Step 1: Build query params
@@ -77,38 +79,38 @@ export class DeliveryPointsService {
 
   // constructor(private msalService: MsalService) {}
 
-  // getAll(params?: QueryParamsModel): Observable<PaginatedResponse<DeliveryPoint>> {
-  //   // Step 1: Acquire token silently
-  //   const account = this.msalService.instance.getActiveAccount();
-  //   if (!account) {
-  //     throw new Error('No active MSAL account. User must log in first.');
-  //   }
+  getAll(params?: QueryParamsModel): Observable<PaginatedResponse<DeliveryPoint>> {
+    // Step 1: Acquire token silently
+    const account = this.msalService.instance.getActiveAccount();
+    if (!account) {
+      throw new Error('No active MSAL account. User must log in first.');
+    }
 
-  //   return from(
-  //     this.msalService.acquireTokenSilent({
-  //       scopes: [environment.api.scope],
-  //       account: account,
-  //     })
-  //   ).pipe(
-  //     switchMap((res) => {
-  //       // Step 2: Build query params
-  //       let parsed = new HttpParams();
-  //       if (params) {
-  //         Object.entries(params).forEach(([key, value]) => {
-  //           if (value !== undefined && value !== null) {
-  //             parsed = parsed.set(key, value.toString());
-  //           }
-  //         });
-  //       }
+    return from(
+      this.msalService.acquireTokenSilent({
+        scopes: [environment.api.scope],
+        account: account,
+      })
+    ).pipe(
+      switchMap((res) => {
+        // Step 2: Build query params
+        let parsed = new HttpParams();
+        if (params) {
+          Object.entries(params).forEach(([key, value]) => {
+            if (value !== undefined && value !== null) {
+              parsed = parsed.set(key, value.toString());
+            }
+          });
+        }
 
-  //       // Step 3: Make the actual HTTP request with Authorization header
-  //       return this.http.get<PaginatedResponse<DeliveryPoint>>(this.apiUrl, {
-  //         params: parsed,
-  //         headers: { Authorization: `Bearer ${res.accessToken}` },
-  //       });
-  //     })
-  //   );
-  // }
+        // Step 3: Make the actual HTTP request with Authorization header
+        return this.http.get<PaginatedResponse<DeliveryPoint>>(this.apiUrl, {
+          params: parsed,
+          headers: { Authorization: `Bearer ${res.accessToken}` },
+        });
+      })
+    );
+  }
 
   // getAll(params?: QueryParamsModel): Observable<PaginatedResponse<DeliveryPoint>> {
   //   let parsed = new HttpParams();

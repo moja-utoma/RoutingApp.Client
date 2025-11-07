@@ -13,7 +13,7 @@ import { RoutesCreate } from './features/routes/routes-create/routes-create';
 import { VehiclesDetailsPage } from './features/vehicles/vehicles-details-page/vehicles-details-page';
 import { VehiclesCreate } from './features/vehicles/vehicles-create/vehicles-create';
 import { WarehousesCreate } from './features/warehouses/warehouses-create/warehouses-create';
-//import { MsalGuard } from '@azure/msal-angular';
+import { MsalGuard } from '@azure/msal-angular';
 
 //import { AuthGuard } from '@auth0/auth0-angular';
 
@@ -21,6 +21,7 @@ export const routes: Routes = [
   {
     path: '',
     component: Base,
+    canActivate: [MsalGuard],
     //canActivate: [AuthGuard],
     children: [
       { path: '', component: Home },
