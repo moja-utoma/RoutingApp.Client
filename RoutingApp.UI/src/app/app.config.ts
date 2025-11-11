@@ -14,9 +14,9 @@ import {
   withInterceptors,
   withInterceptorsFromDi,
 } from '@angular/common/http';
-import { MsalModule, MsalInterceptor, MsalGuard } from '@azure/msal-angular';
+//import { MsalModule, MsalInterceptor, MsalGuard } from '@azure/msal-angular';
 import { InteractionType } from '@azure/msal-browser';
-import { MSALInstanceFactory } from '../main';
+//import { MSALInstanceFactory } from '../main';
 
 import { authHttpInterceptorFn, provideAuth0 } from '@auth0/auth0-angular';
 
@@ -40,11 +40,12 @@ export const appConfig: ApplicationConfig = {
         audience: envAuth0.audience,
         scope: 'openid profile email read:current_user',
       },
-
+      cacheLocation: 'localstorage',
+      useRefreshTokens: true,
       httpInterceptor: {
         allowedList: [
           {
-            uri: envAuth0.audience+'*',
+            uri: envAuth0.audience + '*',
             tokenOptions: {
               authorizationParams: {
                 audience: envAuth0.audience,

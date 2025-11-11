@@ -4,7 +4,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
-import { MsalService } from '@azure/msal-angular';
+//import { MsalService } from '@azure/msal-angular';
 
 @Component({
   selector: 'app-menu',

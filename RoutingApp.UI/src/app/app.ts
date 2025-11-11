@@ -1,6 +1,6 @@
 import { ApplicationRef, Component, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { MsalService } from '@azure/msal-angular';
+//import { MsalService } from '@azure/msal-angular';
 import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
@@ -19,8 +19,8 @@ export class App implements OnInit {
 
   ngOnInit(): void {
     // Wait until Angular is stable before triggering login
-    this.appRef.isStable.subscribe((stable) => {
-      if (stable) {
+    this.auth.isLoading$.subscribe((loading) => {
+      if (!loading) {
         this.auth.isAuthenticated$.subscribe((isAuth) => {
           if (!isAuth) {
             this.auth.loginWithRedirect();
@@ -28,6 +28,15 @@ export class App implements OnInit {
         });
       }
     });
+    // this.appRef.isStable.subscribe((stable) => {
+    //   if (stable) {
+    //     this.auth.isAuthenticated$.subscribe((isAuth) => {
+    //       if (!isAuth) {
+    //         this.auth.loginWithRedirect();
+    //       }
+    //     });
+    //   }
+    // });
   }
 
   // ngOnInit() {

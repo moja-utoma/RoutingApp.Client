@@ -24,6 +24,11 @@
   Simulate Vehicle Movement
 </button>
 
+  @if (calculationString !== '') {}
+  <div>
+    <div>Raw Calculation Data</div>
+      <p>{{ calculationString }}</p>
+</div>
 
   @if (mapPoints.length > 0) {
   <div class="map-section">

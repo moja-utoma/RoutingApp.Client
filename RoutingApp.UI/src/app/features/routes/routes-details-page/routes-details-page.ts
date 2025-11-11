@@ -9,6 +9,7 @@ import { Table } from '../../../shared/components/table/table';
 import { MapView, MapPoint } from '../../../shared/components/map-view/map-view';
 import { RouteDetails, RoutesService } from '../routes-service';
 import { RouteStreamManagerService } from '../../../shared/services/route-stream-manager-service';
+import { SignalRService } from '../../../shared/services/signalr-service';
 
 @Component({
   selector: 'app-routes-details-page',
@@ -21,11 +22,14 @@ export class RoutesDetailsPage {
   private routesService = inject(RoutesService);
   private route = inject(ActivatedRoute);
   private streamManager = inject(RouteStreamManagerService);
+  private signalR = inject(SignalRService);
 
   routeDetails?: RouteDetails;
   loading = true;
   error?: string;
   calculating = false;
+
+  calculationString: string = '';
 
   private _mapPoints: MapPoint[] = [];
 
@@ -103,7 +107,7 @@ export class RoutesDetailsPage {
       next: (data) => {
         this.routeDetails = data;
         if (data.calculatedRoute?.calculation) {
-          this._mapPoints = this.extractMapPoints(data.calculatedRoute.calculation);
+          this._mapPoints = this.extractMapPoints(data.calculatedRoute.calculation, data.calculatedRoute.createdAt);
         } else {
           this._mapPoints = this.extractInitialMapPoints(data);
         }
@@ -118,26 +122,68 @@ export class RoutesDetailsPage {
     });
   }
 
+  private async handleRouteCalculation(correlationId: string): Promise<void> {
+    localStorage.setItem('correlationId', correlationId);
+    await this.signalR.startConnection();
+
+    this.signalR.subscribeToRoute(correlationId, (data) => {
+      console.log('Route received via SignalR:', data);
+      this.routeDetails!.calculatedRoute = data;
+      this._mapPoints = this.extractMapPoints(data.calculation, data.createdAt);
+      this.calculating = false;
+      localStorage.removeItem('correlationId');
+    });
+
+    setTimeout(() => {
+      if (this.calculating) {
+        this.routesService.getRouteResult(correlationId).subscribe({
+          next: (fallbackData) => {
+            console.log('Route received via fallback:', fallbackData);
+            this.routeDetails!.calculatedRoute = fallbackData;
+            this._mapPoints = this.extractMapPoints(fallbackData.calculation, fallbackData.createdAt);
+            this.calculating = false;
+            localStorage.removeItem('correlationId');
+          },
+          error: (err) => {
+            console.error('Fallback API error:', err);
+            this.error = 'Failed to retrieve route result';
+            this.calculating = false;
+          },
+        });
+      }
+    }, 10000);
+  }
+
   calculateRoute(): void {
     if (!this.routeDetails) return;
 
     this.calculating = true;
 
     this.routesService.calculateRoute(this.routeDetails.id).subscribe({
-      next: (calc) => {
-        this.routeDetails!.calculatedRoute = calc;
-        this._mapPoints = this.extractMapPoints(calc.calculation);
-        this.calculating = false;
+      next: (response: { correlationId: string }) => {
+        this.handleRouteCalculation(response.correlationId);
       },
       error: (err) => {
         console.error('Calculation error:', err);
-        this.error = 'Failed to calculate route';
+        this.error = 'Failed to initiate route calculation';
         this.calculating = false;
       },
     });
+    // this.routesService.calculateRoute(this.routeDetails.id).subscribe({
+    //   next: (calc) => {
+    //     this.routeDetails!.calculatedRoute = calc;
+    //     this._mapPoints = this.extractMapPoints(calc.calculation);
+    //     this.calculating = false;
+    //   },
+    //   error: (err) => {
+    //     console.error('Calculation error:', err);
+    //     this.error = 'Failed to calculate route';
+    //     this.calculating = false;
+    //   },
+    // });
   }
 
-  private extractMapPoints(calculationJson: string): MapPoint[] {
+  private extractMapPoints(calculationJson: string, stamp: string = ''): MapPoint[] {
     const points: MapPoint[] = [];
 
     try {
@@ -228,6 +274,7 @@ export class RoutesDetailsPage {
       return points;
     } catch (e) {
       console.error('Failed to parse calculation JSON:', e);
+      this.calculationString = calculationJson+' '+stamp;
       return [];
     }
   }
@@ -281,5 +328,9 @@ export class RoutesDetailsPage {
 
   getTotalWeight(): number {
     return this.routeDetails?.deliveryPoints.reduce((sum, dp) => sum + dp.weight, 0) || 0;
+  }
+
+  get hasValidCalculatedRoute(): boolean {
+    return this.routeDetails?.calculatedRoute?.calculation != null && this._mapPoints.length > 0;
   }
 }
