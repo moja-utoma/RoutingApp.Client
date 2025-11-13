@@ -60,7 +60,7 @@ export class Home implements OnInit {
       console.log(token);
       const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-      this.http.get<ChatHistoryResponse>(`${this.apiUrl}/history`, { headers }).subscribe({
+      this.http.get<ChatHistoryResponse>(`${this.apiUrl}/history?conversationId=${this.conversationId}`, { headers }).subscribe({
         next: (response) => {
           this.messages = response.history.filter((m) => m.role !== 'system');
         },
