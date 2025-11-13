@@ -1,2 +1,55 @@
 <h1>Welcome to Dashboard, {{userName}}</h1>
 <p>Your statistics will be here shortly...</p>
+
+<div class="chat-container">
+  <div class="messages-container">
+    @if (messages.length === 0) {
+      <div class="empty-state">
+        <p class="title">Welcome to Chat</p>
+        <p class="subtitle">Start a conversation by typing a message below</p>
+      </div>
+    }
+
+    @for (msg of messages; track msg) {
+      <div [class]="'message ' + msg.role">
+        <div class="message-bubble">
+          {{ msg.content }}
+        </div>
+      </div>
+    }
+
+    @if (loading) {
+      <div class="message assistant">
+        <div class="message-bubble loading">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+      </div>
+    }
+
+    @if (error) {
+      <div class="error-message">
+        <p>{{ error }}</p>
+      </div>
+    }
+  </div>
+
+  <div class="input-container">
+    <input
+      type="text"
+      [(ngModel)]="userInput"
+      (keyup.enter)="sendMessage()"
+      placeholder="Type your message..."
+      [disabled]="loading"
+      class="message-input"
+    />
+    <button
+      (click)="sendMessage()"
+      [disabled]="loading || !userInput.trim()"
+      class="send-button"
+    >
+      Send
+    </button>
+  </div>
+</div>
