@@ -1,6 +1,11 @@
 <h1>Welcome to Dashboard, {{userName}}</h1>
 <p>Your statistics will be here shortly...</p>
 
+<div class="chat-header">
+  <button class="new-chat-button" (click)="clearHistory()" [disabled]="loading">
+    Clear chat
+  </button>
+</div>
 <div class="chat-container">
   <div class="messages-container">
     @if (messages.length === 0) {
