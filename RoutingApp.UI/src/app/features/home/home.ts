@@ -56,17 +56,22 @@ export class Home implements OnInit {
     if (!this.conversationId) return;
 
     try {
-      const token = await this.auth.getAccessTokenSilently();
-      console.log(token);
-      const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+      this.auth.getAccessTokenSilently().subscribe((token) => {
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-      this.http.get<ChatHistoryResponse>(`${this.apiUrl}/history?conversationId=${this.conversationId}`, { headers }).subscribe({
-        next: (response) => {
-          this.messages = response.history.filter((m) => m.role !== 'system');
-        },
-        error: (err) => {
-          console.error('Failed to load history:', err);
-        },
+        this.http
+          .get<ChatHistoryResponse>(
+            `${this.apiUrl}/history?conversationId=${this.conversationId}`,
+            { headers }
+          )
+          .subscribe({
+            next: (response) => {
+              this.messages = response.history.filter((m) => m.role !== 'system');
+            },
+            error: (err) => {
+              console.error('Failed to load history:', err);
+            },
+          });
       });
     } catch (err) {
       console.error('Token retrieval failed:', err);
@@ -84,7 +89,7 @@ export class Home implements OnInit {
     this.loading = true;
 
     try {
-      const token = await this.auth.getAccessTokenSilently().subscribe((token) => {
+      this.auth.getAccessTokenSilently().subscribe((token) => {
         console.log(token);
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
@@ -131,7 +136,7 @@ export class Home implements OnInit {
     this.messages = [];
 
     try {
-      const token = await this.auth.getAccessTokenSilently();
+      this.auth.getAccessTokenSilently().subscribe((token)=>{
       const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
       this.http
@@ -149,6 +154,7 @@ export class Home implements OnInit {
             this.loading = false;
           },
         });
+      });
     } catch (err) {
       console.error('Token retrieval failed:', err);
     }
