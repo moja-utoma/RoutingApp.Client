@@ -18,7 +18,6 @@ export class App implements OnInit {
   private appRef = inject(ApplicationRef);
 
   ngOnInit(): void {
-    // Wait until Angular is stable before triggering login
     this.auth.isLoading$.subscribe((loading) => {
       if (!loading) {
         this.auth.isAuthenticated$.subscribe((isAuth) => {
